@@ -1,17 +1,7 @@
-import { Server, ServerInfo } from '@modelcontextprotocol/sdk/server';
-import { productManager } from './experts/productManager';
-import { uxDesigner } from './experts/uxDesigner';
-import { softwareArchitect } from './experts/softwareArchitect';
-import { getExpertResponse, generateDocument } from './utils/promptUtils';
-import { readTemplate, saveDocument } from './utils/fileUtils';
-import fs from 'fs/promises';
-import path from 'path';
-
-const experts = {
-  productManager,
-  uxDesigner,
-  softwareArchitect
-};
+import { Server, ServerInfo, ToolCallParams, ToolCallResult } from '@modelcontextprotocol/sdk/server';
+import { experts } from './experts';
+import { consultWithExpert, generateExpertDocument, saveForTaskMaster } from './utils/aiUtils';
+import { saveDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
 
 export function createMCPServer() {
   const serverInfo: ServerInfo = {
@@ -21,7 +11,7 @@ export function createMCPServer() {
   
   const server = new Server(serverInfo);
   
-  // Register consultExpert tool
+  // Register the consultExpert tool
   server.registerTool({
     name: 'consultExpert',
     description: 'Consult with an AI expert',
@@ -39,8 +29,8 @@ export function createMCPServer() {
       },
       required: ['role']
     },
-    handler: async (params) => {
-      const { role, projectInfo } = params;
+    handler: async (params: ToolCallParams): Promise<ToolCallResult> => {
+      const { role, projectInfo } = params as { role: string, projectInfo?: string };
       
       if (!experts[role]) {
         return {
@@ -61,20 +51,19 @@ export function createMCPServer() {
       }
       
       try {
-        const aiResponse = await getExpertResponse(expert.systemPrompt, projectInfo);
+        const aiResponse = await consultWithExpert(role, projectInfo);
         return { 
           result: `# Consultation with ${expert.title}\n\n${aiResponse}` 
         };
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
         return {
-          error: `Error consulting with ${expert.title}: ${errorMessage}`
+          error: `Error consulting with ${expert.title}: ${error instanceof Error ? error.message : String(error)}`
         };
       }
     }
   });
   
-  // Register generateDocument tool
+  // Register the generateDocument tool
   server.registerTool({
     name: 'generateDocument',
     description: 'Generate a complete document with an AI expert',
@@ -88,12 +77,17 @@ export function createMCPServer() {
         projectDetails: {
           type: 'string',
           description: 'Detailed project information'
+        },
+        saveForTaskMaster: {
+          type: 'boolean',
+          description: 'Whether to save the document in a format compatible with Task Master'
         }
       },
       required: ['role', 'projectDetails']
     },
-    handler: async (params) => {
-      const { role, projectDetails } = params;
+    handler: async (params: ToolCallParams): Promise<ToolCallResult> => {
+      const { role, projectDetails, saveForTaskMaster: saveForTM = false } = 
+        params as { role: string, projectDetails: string, saveForTaskMaster?: boolean };
       
       if (!experts[role]) {
         return {
@@ -104,27 +98,33 @@ export function createMCPServer() {
       const expert = experts[role];
       
       try {
-        const templatePath = path.join(__dirname, expert.templatePath);
-        const template = await fs.readFile(templatePath, 'utf8');
-        const document = await generateDocument(expert.systemPrompt, template, projectDetails);
+        const template = await readTemplate(expert.templatePath);
+        const document = await generateExpertDocument(role, template, projectDetails);
         
         // Save the document to a file
         const filename = `${expert.outputFormat.replace(/\s+/g, '_').toLowerCase()}.md`;
         const filePath = await saveDocument(document, filename);
         
+        // If this is a PRD and saveForTaskMaster is true, also save in Task Master format
+        let taskMasterMessage = '';
+        if (role === 'productManager' && saveForTM) {
+          const tmPath = await saveForTaskMaster(document);
+          await setupTaskMasterIntegration();
+          taskMasterMessage = `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+        }
+        
         return { 
-          result: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})` 
+          result: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}` 
         };
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
         return {
-          error: `Error generating ${expert.outputFormat}: ${errorMessage}`
+          error: `Error generating ${expert.outputFormat}: ${error instanceof Error ? error.message : String(error)}`
         };
       }
     }
   });
   
-  // Register expertWorkflow tool
+  // Register the expertWorkflow tool
   server.registerTool({
     name: 'expertWorkflow',
     description: 'Get an overview of the AI expert workflow',
@@ -133,33 +133,53 @@ export function createMCPServer() {
       properties: {},
       required: []
     },
-    handler: async () => {
+    handler: async (): Promise<ToolCallResult> => {
       return {
         result: `# AI Expert Workflow
 
 This workflow helps you develop your project through three expert consultations:
 
-1. **Product Definition** - Work with an AI Product Manager to create a PRD
+1. **Product Definition** - Work with an AI Product Manager to create a PRD with:
+   - Product Overview and Problem Statement
+   - User Personas and Stories
+   - Feature Requirements
+   - MVP Summary
+   - Business Model
+   - Lean Startup Validation Plan
    \`\`\`
    consultExpert productManager "Brief project description"
    \`\`\`
 
-2. **UX Design** - Work with an AI UX Designer to create a UX Design Document
+2. **UX Design** - Work with an AI UX Designer to create a UX Design Document with:
+   - User Personas and Journey Maps
+   - Information Architecture
+   - Wireframe Descriptions
+   - Prototype Description
+   - User Testing Plan
    \`\`\`
    consultExpert uxDesigner "Brief project description"
    \`\`\`
 
-3. **Technical Architecture** - Work with an AI Software Architect to create a Software Specification
+3. **Technical Architecture** - Work with an AI Software Architect to create a Software Specification with:
+   - System Architecture Overview
+   - Technology Stack Recommendations
+   - Functional Specifications
+   - Technical Design
+   - Integration Requirements
    \`\`\`
    consultExpert softwareArchitect "Brief project description"
    \`\`\`
 
 After consulting with each expert, use \`generateDocument\` to create the full document:
    \`\`\`
-   generateDocument productManager "Detailed project information from consultation"
+   generateDocument productManager "Detailed project information from consultation" true
    \`\`\`
-
-Once you have your documents, use Task Master's \`parse-prd\` command to create tasks from your PRD.`
+   
+The \`true\` parameter at the end saves the PRD in a format that Task Master can parse.
+Once you have your PRD saved, you can use Task Master to create tasks with:
+   \`\`\`
+   Can you parse the PRD at scripts/prd.txt and generate tasks?
+   \`\`\``
       };
     }
   });

@@ -1,43 +1,31 @@
 # UX Design Document
 
-## Executive Summary
-[Brief overview of the product and UX approach]
-
-## User Research Summary
-[Summary of user research findings]
-
 ## User Personas
-[Detailed user personas with goals, needs, and behaviors]
+[User personas go here]
 
-## User Journeys
-[End-to-end user journeys through the product]
+## User Journey Maps
+[User journey maps go here]
 
 ## Information Architecture
-[Site map or app structure with navigation patterns]
+[Information architecture go here]
 
-## Interaction Design
-[Description of key interactions and behaviors]
+## Wireframe Descriptions
+[Wireframe descriptions go here]
 
-## Wireframes
-[Text descriptions of key screens and layouts]
+## Interaction Patterns
+[Interaction patterns go here]
 
 ## UI Components and Patterns
 [Description of reusable UI components and design patterns]
 
 ## Accessibility Considerations
-[Accessibility requirements and implementations]
+[Accessibility considerations go here]
 
 ## Responsive Design Strategy
 [Approach for different screen sizes and devices]
 
-## Design Principles
-[Guiding design principles for the product]
+## Prototype Description
+[Detailed explanation of how the prototype should function]
 
-## Usability Testing Plan
-[Plan for testing the design with users]
-
-## Open Questions and Next Steps
-[Outstanding questions and planned iterations]
-
-## Appendix
-[References, research materials, and additional context] 
+## User Testing Plan
+[Methods to validate the UX with real users] 
