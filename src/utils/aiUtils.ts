@@ -1,14 +1,17 @@
-import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import { experts } from '../experts';
 import fs from 'fs/promises';
 import path from 'path';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+// Get OpenRouter API key
+const apiKey = process.env.OPENROUTER_API_KEY || '';
+if (!apiKey) {
+  console.error('Error: OPENROUTER_API_KEY is required but not set in environment variables');
+  process.exit(1);
+}
 
 export async function consultWithExpert(role: string, userInput: string): Promise<string> {
   const expert = experts[role];
@@ -17,26 +20,37 @@ export async function consultWithExpert(role: string, userInput: string): Promis
   }
 
   try {
-    const response = await anthropic.messages.create({
-      model: process.env.MODEL || 'claude-3-sonnet-20240229',
-      max_tokens: parseInt(process.env.MAX_TOKENS || '4000'),
-      temperature: parseFloat(process.env.TEMPERATURE || '0.7'),
-      system: expert.systemPrompt,
-      messages: [
-        { role: 'user', content: userInput }
-      ]
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/yourusername/ai-expert-workflow-mcp',
+        'X-Title': 'AI Expert Workflow MCP'
+      },
+      body: JSON.stringify({
+        model: process.env.OPENROUTER_MODEL || 'openai/gpt-3.5-turbo',
+        max_tokens: parseInt(process.env.MAX_TOKENS || '4000', 10),
+        temperature: parseFloat(process.env.TEMPERATURE || '0.7'),
+        messages: [
+          { role: 'system', content: expert.systemPrompt },
+          { role: 'user', content: userInput }
+        ]
+      })
     });
 
-    // Handle different content block types
-    const content = response.content[0];
-    if ('text' in content) {
-      return content.text || '';
-    } else {
-      console.error('Unexpected content format:', content);
-      return 'Error: Unexpected response format from Claude API';
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`OpenRouter API error: ${response.status} ${JSON.stringify(errorData)}`);
     }
+
+    const data = await response.json();
+    
+    // Get the response text
+    const responseText = data.choices[0].message.content || '';
+    return responseText;
   } catch (error) {
-    console.error('Error calling Claude API:', error);
+    console.error('Error calling OpenRouter API:', error);
     throw error;
   }
 }
@@ -50,26 +64,37 @@ export async function generateExpertDocument(role: string, template: string, use
   const enhancedPrompt = `${expert.systemPrompt}\n\nPlease use the following template structure for your response:\n\n${template}\n\nBased on the user's input, create a complete, well-structured document. Format your response using Markdown with clear sections and subsections.`;
 
   try {
-    const response = await anthropic.messages.create({
-      model: process.env.MODEL || 'claude-3-sonnet-20240229',
-      max_tokens: parseInt(process.env.MAX_TOKENS || '8000'),
-      temperature: parseFloat(process.env.TEMPERATURE || '0.5'),
-      system: enhancedPrompt,
-      messages: [
-        { role: 'user', content: userInput }
-      ]
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/yourusername/ai-expert-workflow-mcp',
+        'X-Title': 'AI Expert Workflow MCP'
+      },
+      body: JSON.stringify({
+        model: process.env.OPENROUTER_MODEL || 'openai/gpt-3.5-turbo',
+        max_tokens: parseInt(process.env.MAX_TOKENS || '8000', 10),
+        temperature: parseFloat(process.env.TEMPERATURE || '0.5'),
+        messages: [
+          { role: 'system', content: enhancedPrompt },
+          { role: 'user', content: userInput }
+        ]
+      })
     });
 
-    // Handle different content block types
-    const content = response.content[0];
-    if ('text' in content) {
-      return content.text || '';
-    } else {
-      console.error('Unexpected content format:', content);
-      return 'Error: Unexpected response format from Claude API';
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`OpenRouter API error: ${response.status} ${JSON.stringify(errorData)}`);
     }
+
+    const data = await response.json();
+    
+    // Get the response text
+    const responseText = data.choices[0].message.content || '';
+    return responseText;
   } catch (error) {
-    console.error('Error calling Claude API:', error);
+    console.error('Error calling OpenRouter API:', error);
     throw error;
   }
 }

@@ -1,6 +1,6 @@
 # AI Expert Workflow MCP
 
-An MCP server that implements the AI Expert Workflow for integration with Claude Task Master.
+An MCP server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities.
 
 ## 🚀 Quick Start for End Users
 
@@ -123,7 +123,7 @@ This streamlined workflow transforms your idea into a well-planned product and o
 
 3. Configure environment variables:
    - Copy `.env.example` to `.env`
-   - Add your Anthropic API key to the `.env` file
+   - Add your OpenRouter API key to the `.env` file (get one from https://openrouter.ai/keys)
 
 4. Build the project:
    ```

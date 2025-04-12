@@ -1,4 +1,4 @@
-import { createMCPServer } from './mcp-fixed';
+import { createMCPServer } from './mcp';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
@@ -6,11 +6,14 @@ dotenv.config();
 
 async function main() {
   try {
-    // Check if ANTHROPIC_API_KEY is set
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error('Error: ANTHROPIC_API_KEY is required but not set in the environment');
+    // Check if OPENROUTER_API_KEY is set
+    if (!process.env.OPENROUTER_API_KEY) {
+      console.error('Error: OPENROUTER_API_KEY is required but not set in the environment');
       process.exit(1);
     }
+
+    // Log which model we're using
+    console.log(`Using OpenRouter API with model: ${process.env.OPENROUTER_MODEL || 'default model'}`);
 
     console.log('Starting AI Expert Workflow MCP Server...');
 

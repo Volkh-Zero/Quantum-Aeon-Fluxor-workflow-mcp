@@ -11,7 +11,7 @@ export function createMCPServer() {
     name: 'ai-expert-workflow',
     version: '1.0.0'
   });
-  
+
   // Register the consultExpert tool
   server.tool('consultExpert', {
     type: 'object',
@@ -28,15 +28,15 @@ export function createMCPServer() {
     required: ['role']
   }, async (params: any) => {
     const { role, projectInfo } = params;
-    
+
     if (!experts[role]) {
       return {
         error: `Unknown expert role: ${role}. Available roles: ${Object.keys(experts).join(', ')}`
       };
     }
-    
+
     const expert = experts[role];
-    
+
     if (!projectInfo) {
       let response = `# Consulting with ${expert.title}\n\n`;
       response += "Please provide a brief description of your project to get started.\n\n";
@@ -46,10 +46,10 @@ export function createMCPServer() {
       });
       return { content: [{ type: 'text', text: response }] };
     }
-    
+
     try {
       const aiResponse = await consultWithExpert(role, projectInfo);
-      return { 
+      return {
         content: [{ type: 'text', text: `# Consultation with ${expert.title}\n\n${aiResponse}` }]
       };
     } catch (error) {
@@ -58,7 +58,7 @@ export function createMCPServer() {
       };
     }
   });
-  
+
   // Register the generateDocument tool
   server.tool('generateDocument', {
     type: 'object',
@@ -79,23 +79,23 @@ export function createMCPServer() {
     required: ['role', 'projectDetails']
   }, async (params: any) => {
     const { role, projectDetails, saveForTaskMaster: saveForTM = false } = params;
-    
+
     if (!experts[role]) {
       return {
         error: `Unknown expert role: ${role}. Available roles: ${Object.keys(experts).join(', ')}`
       };
     }
-    
+
     const expert = experts[role];
-    
+
     try {
       const template = await readTemplate(expert.templatePath);
       const document = await generateExpertDocument(role, template, projectDetails);
-      
+
       // Save the document to a file
       const filename = `${expert.outputFormat.replace(/\s+/g, '_').toLowerCase()}.md`;
       await saveDocument(document, filename);
-      
+
       // If this is a PRD and saveForTaskMaster is true, also save in Task Master format
       let taskMasterMessage = '';
       if (role === 'productManager' && saveForTM) {
@@ -103,8 +103,8 @@ export function createMCPServer() {
         await setupTaskMasterIntegration();
         taskMasterMessage = `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
       }
-      
-      return { 
+
+      return {
         content: [{ type: 'text', text: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}` }]
       };
     } catch (error) {
@@ -113,7 +113,7 @@ export function createMCPServer() {
       };
     }
   });
-  
+
   // Register the expertWorkflow tool
   server.tool('expertWorkflow', {
     type: 'object',
@@ -160,7 +160,7 @@ After consulting with each expert, use \`generateDocument\` to create the full d
    \`\`\`
    generateDocument productManager "Detailed project information from consultation" true
    \`\`\`
-   
+
 The \`true\` parameter at the end saves the PRD in a format that Task Master can parse.
 Once you have your PRD saved, you can use Task Master to create tasks with:
    \`\`\`
@@ -168,6 +168,6 @@ Once you have your PRD saved, you can use Task Master to create tasks with:
    \`\`\`` }]
     };
   });
-  
+
   return server;
 }
