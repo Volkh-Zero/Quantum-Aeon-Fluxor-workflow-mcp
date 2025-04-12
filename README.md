@@ -29,7 +29,7 @@ An MCP server that implements the AI Expert Workflow for integration with Claude
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/ai-expert-workflow-mcp.git
+   git clone https://github.com/bacoco/ai-expert-workflow-mcp.git
    cd ai-expert-workflow-mcp
    ```
 

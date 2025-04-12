@@ -876,7 +876,7 @@ If you want to make your MCP available to others:
 
 3. Create a GitHub repository and push your code:
    ```bash
-   git remote add origin https://github.com/yourusername/ai-expert-workflow-mcp.git
+   git remote add origin https://github.com/bacoco/ai-expert-workflow-mcp.git
    git push -u origin main
    ```
 
