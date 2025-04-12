@@ -8,7 +8,7 @@ echo "Make sure your .env file has a valid OPENROUTER_API_KEY"
 export TEST_DEBUG=true
 
 # Run the test with ts-node
-npx ts-node test-openrouter.ts
+npx ts-node ./tests/test-openrouter.ts
 
 # Check if tests passed
 if [ $? -eq 0 ]; then

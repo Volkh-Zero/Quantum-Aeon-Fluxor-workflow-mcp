@@ -4,7 +4,7 @@ import { consultWithExpert, generateExpertDocument, saveForTaskMaster } from './
 import { saveDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
 
 // We'll use require for the MCP SDK to avoid TypeScript import issues
-const { McpServer } = require('@modelcontextprotocol/sdk/dist/cjs/server/mcp.js');
+const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp');
 
 export function createMCPServer() {
   const server = new McpServer({
