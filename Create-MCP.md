@@ -35,7 +35,7 @@ Create a `.env` file based on the example:
 cp .env.example .env
 ```
 
-Edit the `.env` file and add your API keys:
+Edit the `.env` file and add your Anthropic API key:
 
 ```
 # Anthropic API Key (Required)
@@ -189,4 +189,4 @@ npm link
 npm link ai-expert-workflow-mcp
 ```
 
-This allows you to test changes without publishing. 
+This allows you to test changes without publishing.

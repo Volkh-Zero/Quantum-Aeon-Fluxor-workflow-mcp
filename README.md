@@ -123,7 +123,7 @@ This streamlined workflow transforms your idea into a well-planned product and o
 
 3. Configure environment variables:
    - Copy `.env.example` to `.env`
-   - Add your API keys to the `.env` file
+   - Add your Anthropic API key to the `.env` file
 
 4. Build the project:
    ```

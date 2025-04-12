@@ -1,5 +1,5 @@
-import { createMCPServer } from './mcp';
-import dotenv from 'dotenv';
+import { createMCPServer } from './mcp-fixed';
+import * as dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
@@ -13,20 +13,19 @@ async function main() {
     }
 
     console.log('Starting AI Expert Workflow MCP Server...');
-    
+
     const server = createMCPServer();
-    
+
     console.log('Server created, initializing transport...');
-    
+
     // Use MCP stdio transport
-    const transport = await import('@modelcontextprotocol/sdk/server/stdio').then(
-      module => new module.StdioServerTransport()
-    );
-    
+    const { StdioServerTransport } = require('@modelcontextprotocol/sdk/dist/cjs/server/stdio.js');
+    const transport = new StdioServerTransport();
+
     console.log('Starting server...');
-    
-    await server.listen(transport);
-    
+
+    await server.connect(transport);
+
     console.log('Server terminated.');
   } catch (error) {
     console.error('Error starting server:', error instanceof Error ? error.message : String(error));
@@ -40,4 +39,4 @@ if (require.main === module) {
     console.error('Unhandled error:', error);
     process.exit(1);
   });
-} 
+}

@@ -1,4 +1,4 @@
-import Anthropic from 'anthropic';
+import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import { experts } from '../experts';
 import fs from 'fs/promises';
@@ -15,7 +15,7 @@ export async function consultWithExpert(role: string, userInput: string): Promis
   if (!expert) {
     throw new Error(`Unknown expert role: ${role}`);
   }
-  
+
   try {
     const response = await anthropic.messages.create({
       model: process.env.MODEL || 'claude-3-sonnet-20240229',
@@ -26,8 +26,15 @@ export async function consultWithExpert(role: string, userInput: string): Promis
         { role: 'user', content: userInput }
       ]
     });
-    
-    return response.content[0].text;
+
+    // Handle different content block types
+    const content = response.content[0];
+    if ('text' in content) {
+      return content.text || '';
+    } else {
+      console.error('Unexpected content format:', content);
+      return 'Error: Unexpected response format from Claude API';
+    }
   } catch (error) {
     console.error('Error calling Claude API:', error);
     throw error;
@@ -39,9 +46,9 @@ export async function generateExpertDocument(role: string, template: string, use
   if (!expert) {
     throw new Error(`Unknown expert role: ${role}`);
   }
-  
+
   const enhancedPrompt = `${expert.systemPrompt}\n\nPlease use the following template structure for your response:\n\n${template}\n\nBased on the user's input, create a complete, well-structured document. Format your response using Markdown with clear sections and subsections.`;
-  
+
   try {
     const response = await anthropic.messages.create({
       model: process.env.MODEL || 'claude-3-sonnet-20240229',
@@ -52,8 +59,15 @@ export async function generateExpertDocument(role: string, template: string, use
         { role: 'user', content: userInput }
       ]
     });
-    
-    return response.content[0].text;
+
+    // Handle different content block types
+    const content = response.content[0];
+    if ('text' in content) {
+      return content.text || '';
+    } else {
+      console.error('Unexpected content format:', content);
+      return 'Error: Unexpected response format from Claude API';
+    }
   } catch (error) {
     console.error('Error calling Claude API:', error);
     throw error;
@@ -70,14 +84,14 @@ export async function saveForTaskMaster(content: string): Promise<string> {
     } catch (err) {
       // Directory might already exist
     }
-    
+
     // Save to scripts/prd.txt for Task Master compatibility
     const filePath = path.join(scriptsDir, 'prd.txt');
     await fs.writeFile(filePath, content, 'utf8');
-    
+
     return filePath;
   } catch (error) {
     console.error('Error saving for Task Master:', error);
     throw error;
   }
-} 
+}
