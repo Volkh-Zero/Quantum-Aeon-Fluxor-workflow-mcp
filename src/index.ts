@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function main() {
+  let serverInfo;
   try {
     // Check if OPENROUTER_API_KEY is set
     if (!process.env.OPENROUTER_API_KEY) {
@@ -17,19 +18,53 @@ async function main() {
 
     console.log('Starting AI Expert Workflow MCP Server...');
 
+    // Try to create the server
     const server = createMCPServer();
+
+    // If server creation failed, retry after a delay
+    if (!server) {
+      console.log('Waiting for MCP SDK to load...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const retryServer = createMCPServer();
+      if (!retryServer) {
+        console.error('Failed to create MCP server after retry. Please check the MCP SDK installation.');
+        process.exit(1);
+      }
+      console.log('Server created on retry, initializing transport...');
+
+      try {
+        const stdioModule = await import('@modelcontextprotocol/sdk/server/stdio.js');
+        const transport = new stdioModule.StdioServerTransport();
+        serverInfo = { server: retryServer, transport };
+
+        console.log('Starting server...');
+        await serverInfo.server.connect(serverInfo.transport);
+        console.log('Server terminated.');
+        return;
+      } catch (error) {
+        console.error('Error importing StdioServerTransport:', error);
+        process.exit(1);
+      }
+    }
 
     console.log('Server created, initializing transport...');
 
     // Use MCP stdio transport
-    const { StdioServerTransport } = require('@modelcontextprotocol/sdk/dist/cjs/server/stdio.js');
-    const transport = new StdioServerTransport();
+    try {
+      const stdioModule = await import('@modelcontextprotocol/sdk/server/stdio.js');
+      const transport = new stdioModule.StdioServerTransport();
+      serverInfo = { server, transport };
+    } catch (error) {
+      console.error('Error importing StdioServerTransport:', error);
+      process.exit(1);
+    }
 
-    console.log('Starting server...');
-
-    await server.connect(transport);
-
-    console.log('Server terminated.');
+    // Connect the server to the transport
+    if (serverInfo) {
+      console.log('Starting server...');
+      await serverInfo.server.connect(serverInfo.transport);
+      console.log('Server terminated.');
+    }
   } catch (error) {
     console.error('Error starting server:', error instanceof Error ? error.message : String(error));
     process.exit(1);

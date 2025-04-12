@@ -3,11 +3,27 @@ import { experts } from './experts';
 import { consultWithExpert, generateExpertDocument, saveForTaskMaster } from './utils/aiUtils';
 import { saveDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
 
-// We'll use require for the MCP SDK to avoid TypeScript import issues
-const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp');
+// Import the MCP SDK using dynamic import
+import('@modelcontextprotocol/sdk/server/mcp.js').then(module => {
+  global.McpServer = module.McpServer;
+}).catch(error => {
+  console.error('Error importing MCP SDK:', error);
+  process.exit(1);
+});
+
+// Define a global variable for TypeScript
+declare global {
+  var McpServer: any;
+}
 
 export function createMCPServer() {
-  const server = new McpServer({
+  // Wait for the MCP SDK to be imported
+  if (!global.McpServer) {
+    console.error('MCP SDK not loaded yet. Please try again in a moment.');
+    return null;
+  }
+
+  const server = new global.McpServer({
     name: 'ai-expert-workflow',
     version: '1.0.0'
   });
