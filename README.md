@@ -135,6 +135,21 @@ This streamlined workflow transforms your idea into a well-planned product and o
    npm start
    ```
 
+6. Run tests (optional):
+   ```
+   # Run JavaScript tests
+   npm test
+
+   # Run TypeScript tests
+   npm run test:ts
+
+   # Or use the shell scripts
+   ./tests/run-js-test.sh
+   ./tests/run-ts-test.sh
+   ```
+
+   Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`.
+
 ### Global Installation
 
 ```

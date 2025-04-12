@@ -10,7 +10,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test": "node tests/test-openrouter.js",
+    "test:ts": "ts-node tests/test-openrouter.ts"
   },
   "keywords": [
     "ai",

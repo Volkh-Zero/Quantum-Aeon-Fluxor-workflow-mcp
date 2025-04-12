@@ -26,6 +26,29 @@ import { consultWithExpert, generateExpertDocument } from './utils/aiUtils';
 const response = await consultWithExpert('productManager', 'My project description');
 ```
 
+## Testing OpenRouter Integration
+
+The project includes comprehensive tests for the OpenRouter integration:
+
+```bash
+# Run JavaScript tests
+npm test
+
+# Run TypeScript tests
+npm run test:ts
+
+# Or use the shell scripts
+./tests/run-js-test.sh
+./tests/run-ts-test.sh
+```
+
+Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`. These files contain detailed information about the API requests and responses, making it easy to debug and understand how the OpenRouter API works.
+
+These tests verify:
+1. Consulting with all three experts (Product Manager, UX Designer, Software Architect)
+2. Generating documents for each expert
+3. Error handling for invalid inputs
+
 ## Benefits of Using OpenRouter
 
 1. **Access to multiple models**: OpenRouter provides access to various AI models from different providers.
