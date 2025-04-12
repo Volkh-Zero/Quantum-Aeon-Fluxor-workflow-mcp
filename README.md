@@ -1,57 +1,52 @@
 # AI Expert Workflow MCP
 
-An MCP server that implements the AI Expert Workflow for integration with Claude Task Master.
+An MCP (Model Control Protocol) server that implements the AI Expert Workflow methodology for seamless integration with Claude Task Master. Transform your AI development process with a structured approach to project planning and execution.
 
-## Features
+AI Expert Workflow
+MCP Compatible
+Claude Powered
 
-- Consult with AI experts in three key roles:
-  - AI Product Manager
-  - AI UX Designer
-  - AI Software Architect
-- Generate comprehensive documents:
-  - Product Requirements Document (PRD)
-  - UX Design Document
-  - Software Architecture Specification
-- Seamless integration with Claude Task Master
+## 🚀 Overview
 
-## Installation
+The AI Expert Workflow MCP enhances your development process by introducing specialized AI expert roles that help define your project before implementation begins:
 
-### Local Development
+1. **Product Definition** with an AI Product Manager
+2. **UX Design** with an AI UX Designer
+3. **Technical Architecture** with an AI Software Architect
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/bacoco/ai-expert-workflow-mcp.git
-   cd ai-expert-workflow-mcp
-   ```
+This structured approach helps prevent "spaghetti code" and maintains focus throughout development by creating clear documentation before task implementation begins.
 
-2. Install dependencies:
-   ```
-   npm install
-   ```
+## ✨ Key Features
 
-3. Configure environment variables:
-   - Copy `.env.example` to `.env`
-   - Add your API keys to the `.env` file
+- **Expert Role Consultation**: Interact with specialized AI roles to refine your project vision
+- **Document Generation**: Create comprehensive professional documentation:
+    - Product Requirements Document (PRD)
+    - UX Design Document
+    - Software Architecture Specification
+- **Seamless Integration**: Works alongside Claude Task Master for a complete development workflow
+- **Conversational Interface**: Engage with experts using natural language in your editor
 
-4. Build the project:
-   ```
-   npm run build
-   ```
 
-5. Start the server:
-   ```
-   npm start
-   ```
+## 📋 Workflow
 
-### Global Installation
+Workflow Diagram
 
-```
+1. **Define Your Product**: Consult with the AI Product Manager to establish clear requirements and project goals
+2. **Design Your Experience**: Collaborate with the AI UX Designer to create intuitive user interfaces and workflows
+3. **Plan Your Architecture**: Work with the AI Software Architect to define technical specifications and approaches
+4. **Generate Tasks**: Use Claude Task Master to convert your PRD into actionable development tasks
+5. **Implement**: Follow Task Master's guidance to efficiently implement your well-planned project
+
+## 🔧 Installation
+
+```bash
 npm install -g ai-expert-workflow-mcp
 ```
 
-## Usage with Cursor AI
 
-1. Add the MCP configuration to your editor:
+## ⚙️ Configuration
+
+Add the MCP configuration to your editor (Cursor is recommended):
 
 ```json
 {
@@ -61,7 +56,7 @@ npm install -g ai-expert-workflow-mcp
       "args": ["-y", "ai-expert-workflow-mcp"],
       "env": {
         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229",
+        "MODEL": "claude-3-7-sonnet-20250219",
         "MAX_TOKENS": 8000,
         "TEMPERATURE": 0.7
       }
@@ -72,7 +67,7 @@ npm install -g ai-expert-workflow-mcp
       "env": {
         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
         "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229",
+        "MODEL": "claude-3-7-sonnet-20250219",
         "PERPLEXITY_MODEL": "sonar-pro",
         "MAX_TOKENS": 64000,
         "TEMPERATURE": 0.2,
@@ -84,121 +79,137 @@ npm install -g ai-expert-workflow-mcp
 }
 ```
 
-2. Enable the MCP in your editor settings
 
-3. Use natural language to interact with the AI Expert Workflow:
+## 💬 Usage Examples
+
+After enabling MCP in your editor settings, you can interact with the AI Expert Workflow using natural language:
+
+### Starting the Workflow
 
 ```
-Can you start the AI Expert Workflow for my project?
-Can you consult with the AI Product Manager to create a PRD for my project?
+Can you explain the AI Expert Workflow for my project?
+```
+
+
+### Product Manager Consultation
+
+```
+Can you consult with the AI Product Manager to create a PRD for my task management app?
+```
+
+
+### Document Generation
+
+```
 Can you generate a complete PRD document based on our consultation?
 ```
 
-4. After generating your PRD, use Task Master to create tasks:
+
+### Task Master Integration
+
+After generating your PRD:
 
 ```
 Can you parse the PRD at prd.md and generate tasks?
 ```
 
-## API Reference
 
-The AI Expert Workflow MCP provides the following tools:
+## 🔄 Complete End-to-End Example
 
-### consultExpert
+Here's a complete workflow example you can follow:
 
-Consult with an AI expert to get guidance on your project.
+1. **Initiate Expert Workflow**
 
-**Parameters:**
-- `role` (required): The expert role to consult with (`productManager`, `uxDesigner`, `softwareArchitect`)
-- `projectInfo`: Brief description of the project
-
-**Example:**
 ```
-consultExpert productManager "I want to build a task management app for developers"
+Can you please explain how the AI Expert Workflow can help me plan my project?
 ```
 
-### generateDocument
+2. **Consult with Product Manager**
 
-Generate a complete document with an AI expert based on project details.
-
-**Parameters:**
-- `role` (required): The expert role to use for document generation
-- `projectDetails` (required): Detailed project information
-
-**Example:**
 ```
-generateDocument productManager "My project is a task management app for developers. It helps teams organize and track their work..."
+Can you consult with the AI Product Manager to create a PRD for a developer task management app with AI assistance features?
 ```
 
-### expertWorkflow
+3. **Generate PRD**
 
-Get an overview of the AI expert workflow.
-
-**Parameters:** None
-
-**Example:**
 ```
-expertWorkflow
+Based on our discussion, can you generate a comprehensive PRD document?
 ```
 
-## Workflow
+4. **Consult with UX Designer**
 
-1. **Product Definition**: Consult with the AI Product Manager to define your product requirements
-2. **UX Design**: Work with the AI UX Designer to create a user experience document
-3. **Technical Architecture**: Collaborate with the AI Software Architect to define your technical approach
-4. **Task Generation**: Use Task Master to convert your PRD into actionable tasks
-5. **Implementation**: Use Task Master to guide your implementation process
+```
+Now, can you consult with the AI UX Designer to create a UX document for this task management app?
+```
 
-## Expert Roles
+5. **Generate UX Document**
 
-### AI Product Manager
+```
+Based on our UX discussion, can you generate a complete UX Design Document?
+```
 
-The AI Product Manager helps you create a detailed Product Requirements Document (PRD) that outlines:
-- Problem statement and solution
-- Target users and user personas
-- Feature requirements and prioritization
-- Success metrics and KPIs
-- Timeline and roadmap
+6. **Consult with Software Architect**
 
-### AI UX Designer
+```
+Finally, can you consult with the AI Software Architect to create a Software Specification for the app?
+```
 
-The AI UX Designer helps you create a UX Design Document that includes:
-- User research and personas
-- User journeys and flows
-- Information architecture
-- Wireframes and interaction design
-- UI components and patterns
+7. **Generate Architecture Specification**
 
-### AI Software Architect
+```
+Based on our architectural discussion, can you generate a complete Software Architecture Specification?
+```
 
-The AI Software Architect helps you create a Software Architecture Specification that covers:
-- System architecture and component structure
-- Data models and API design
-- Technology stack recommendations
-- Security, scalability, and performance considerations
-- Development guidelines and best practices
+8. **Parse PRD with Task Master**
 
-## Integration with Task Master
+```
+Can you please parse the PRD at prd.md and generate development tasks?
+```
 
-This MCP is designed to work seamlessly with the Claude Task Master MCP:
+9. **Begin Implementation**
 
-1. Use AI Expert Workflow to create your PRD:
-   ```
-   Can you consult with the AI Product Manager to create a PRD for my project?
-   Can you generate a complete PRD document based on our consultation?
-   ```
+```
+What's the next task I should work on?
+```
 
-2. Use Task Master to parse the PRD and generate tasks:
-   ```
-   Can you parse the PRD at prd.md and generate tasks?
-   ```
 
-3. Use Task Master to work on the generated tasks:
-   ```
-   What's the next task I should work on?
-   Can you help me implement task 3?
-   ```
+## 🔍 Available Commands
 
-## License
+The AI Expert Workflow MCP provides these tools that you can use in your conversations:
 
-MIT 
+- `expertWorkflow` - Get an overview of the AI expert workflow
+- `consultExpert &lt;role&gt; [projectInfo]` - Consult with an AI expert
+    - Available roles: `productManager`, `uxDesigner`, `softwareArchitect`
+- `generateDocument &lt;role&gt; &lt;projectDetails&gt;` - Generate a complete document with an AI expert
+
+
+## ❓ Troubleshooting
+
+### Common Issues
+
+- **API Key Errors**: Ensure your Anthropic API key is correctly configured
+- **MCP Connection Issues**: Verify MCP is enabled in your editor settings
+- **Document Generation Failures**: Try breaking your project description into smaller sections
+- **Task Master Integration Problems**: Make sure both MCPs are properly configured
+
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+- Inspired by the workflow presented in [Transform your AI development process](https://youtu.be/MbcYhCE7rjE)
+- Built to complement [Claude Task Master](https://github.com/eyaltoledano/claude-task-master)
+- Powered by Claude AI from Anthropic
+
