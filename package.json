@@ -1,6 +1,6 @@
 {
   "name": "ai-expert-workflow-mcp",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "AI Expert Workflow MCP Server for Task Master integration with OpenRouter API support",
   "main": "dist/index.js",
   "bin": {
