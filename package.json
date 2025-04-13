@@ -1,10 +1,11 @@
 {
   "name": "ai-expert-workflow-mcp",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "AI Expert Workflow MCP Server for Task Master integration with OpenRouter API support",
   "main": "dist/index.js",
   "bin": {
-    "ai-expert-workflow-mcp": "dist/index.js"
+    "ai-expert-workflow-mcp": "dist/index.js",
+    "ai-expert-workflow-generate": "generate-and-parse.js"
   },
   "scripts": {
     "build": "tsc",
@@ -12,7 +13,8 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "prepare": "npm run build",
     "test": "node tests/test-openrouter.js",
-    "test:ts": "ts-node tests/test-openrouter.ts"
+    "test:ts": "ts-node tests/test-openrouter.ts",
+    "generate": "node generate-and-parse.js"
   },
   "keywords": [
     "ai",
