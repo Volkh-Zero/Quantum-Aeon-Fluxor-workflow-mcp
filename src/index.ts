@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { createMCPServer } from './mcp';
 import * as dotenv from 'dotenv';
 

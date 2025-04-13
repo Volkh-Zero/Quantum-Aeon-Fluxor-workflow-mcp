@@ -6,7 +6,6 @@
  * This script automates the entire workflow:
  * 1. Generates a PRD using the AI Expert Workflow
  * 2. Saves it in Task Master compatible format
- * 3. Automatically triggers Task Master to parse it and generate tasks
  * 
  * Usage: 
  *   - npm package: npx ai-expert-workflow-generate "Your detailed project description"
@@ -40,56 +39,44 @@ const { generateExpertDocument, saveForTaskMaster } = require('./dist/utils/aiUt
 const { readTemplate } = require('./dist/utils/fileUtils');
 const { experts } = require('./dist/experts');
 
-// Function to check if Task Master MCP is installed
+// Function to check if Task Master AI is installed
 function isTaskMasterInstalled() {
   try {
-    const result = execSync('npm list -g task-master-mcp', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
-    return result.includes('task-master-mcp');
+    const result = execSync('npm list -g task-master-ai', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+    return result.includes('task-master-ai');
   } catch (error) {
     return false;
   }
 }
 
-// Function to launch Task Master and parse the PRD
-function launchTaskMaster(prdPath) {
-  return new Promise((resolve, reject) => {
-    console.log('\n🚀 Launching Task Master to parse your PRD...');
-    
-    // Check if we're in Cursor environment
-    const isCursor = process.env.CURSOR_SESSION_ID || process.env.CURSOR_CONTEXT;
-    
-    if (isCursor) {
-      console.log('✨ Detected Cursor environment. Please use the following command to parse your PRD:');
-      console.log(`\n"Can you parse the PRD at ${prdPath} and generate tasks?"`);
-      return resolve(false);
-    }
-    
-    try {
-      // Create a command to directly invoke task-master-mcp for CLI usage
-      const taskMasterProcess = spawn('npx', ['task-master-mcp', '--parse-prd', prdPath], {
-        stdio: 'inherit',
-        shell: true
-      });
-      
-      taskMasterProcess.on('close', (code) => {
-        if (code === 0) {
-          console.log('✅ Task Master successfully parsed your PRD');
-          resolve(true);
-        } else {
-          console.error(`❌ Task Master exited with code ${code}`);
-          resolve(false);
-        }
-      });
-      
-      taskMasterProcess.on('error', (err) => {
-        console.error('❌ Error launching Task Master:', err.message);
-        resolve(false);
-      });
-    } catch (error) {
-      console.error('❌ Error launching Task Master:', error.message);
-      resolve(false);
-    }
-  });
+// Function to provide Task Master integration instructions
+function provideTaskMasterInstructions(prdPath) {
+  console.log('\n📋 Task Master Integration Options:');
+  
+  // Option 1: MCP integration (recommended)
+  console.log('\n1️⃣ Option 1: MCP Integration (Recommended)');
+  console.log('   Add the Task Master MCP to your editor configuration:');
+  console.log('   ```json');
+  console.log('   "mcpServers": {');
+  console.log('     "taskmaster-ai": {');
+  console.log('       "command": "npx",');
+  console.log('       "args": ["-y", "task-master-ai"],');
+  console.log('       "env": {');
+  console.log('         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",');
+  console.log('         "MODEL": "claude-3-sonnet-20240229"');
+  console.log('       }');
+  console.log('     }');
+  console.log('   }');
+  console.log('   ```');
+  console.log('   Then, ask your AI assistant:');
+  console.log(`   "Can you parse the PRD at ${prdPath} and generate tasks?"`);
+  
+  // Option 2: CLI usage
+  console.log('\n2️⃣ Option 2: Command Line Usage');
+  console.log('   1. Install Task Master:');
+  console.log('      npm install -g task-master-ai');
+  console.log('   2. Parse the PRD:');
+  console.log(`      task-master parse-prd ${prdPath}`);
 }
 
 async function main() {
@@ -115,7 +102,7 @@ async function main() {
     const tmPath = await saveForTaskMaster(document);
     console.log(`✅ Saved at ${tmPath}`);
     
-    // Check if task-master-mcp is installed
+    // Check if task-master-ai is installed
     console.log('\n🔍 Step 3: Checking for Task Master installation...');
     const taskMasterInstalled = isTaskMasterInstalled();
     
@@ -134,20 +121,11 @@ async function main() {
       console.log('✅ PRD saved for Task Master parsing');
       
       if (taskMasterInstalled) {
-        console.log('\n🔄 Step 4: Automatically parsing PRD with Task Master...');
-        const success = await launchTaskMaster(prdPath);
-        
-        if (!success) {
-          console.log('\nℹ️  You can manually parse the PRD with Task Master using:');
-          console.log('   "Can you parse the PRD at scripts/prd.txt and generate tasks?"');
-        }
+        console.log('\n⚠️ Task Master AI found globally installed, but recommended usage is via MCP integration.');
+        provideTaskMasterInstructions(prdPath);
       } else {
-        console.log('\n⚠️  Task Master MCP not found globally installed.');
-        console.log('\nTo complete the workflow:');
-        console.log('\n1. Install Task Master if not already installed:');
-        console.log('   npm install -g task-master-mcp');
-        console.log('\n2. Ask Task Master to generate tasks:');
-        console.log('   "Can you parse the PRD at scripts/prd.txt and generate tasks?"');
+        console.log('\n⚠️ Task Master AI not found globally installed.');
+        provideTaskMasterInstructions(prdPath);
       }
     } catch (error) {
       console.error('❌ Error during Task Master integration:', error.message);

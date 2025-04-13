@@ -36,7 +36,7 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
        },
        "taskmaster-ai": {
          "command": "npx",
-         "args": ["-y", "task-master-mcp"],
+         "args": ["-y", "task-master-ai"],
          "env": {
            "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
            "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
@@ -231,7 +231,7 @@ This makes the `ai-expert-workflow-mcp` command globally available in your termi
     },
     "taskmaster-ai": {
       "command": "npx",
-      "args": ["-y", "task-master-mcp"],
+      "args": ["-y", "task-master-ai"],
       "env": {
         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
         "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
@@ -304,36 +304,61 @@ The AI Expert Workflow seamlessly integrates with Task Master in two ways:
 > - **Anthropic API key** for Task Master AI (get one from [Anthropic](https://console.anthropic.com/))
 > - **Perplexity API key** (optional) for Task Master AI enhanced research capabilities (get one from [Perplexity](https://docs.perplexity.ai/docs/getting-started))
 
-### Method 1: Fully Automated Integration (Recommended)
+### Method 1: Automated PRD Generation (Recommended)
 
-Use the provided script to automate the entire process:
+Use the provided script to generate a PRD and prepare it for Task Master:
 
 ```bash
-# Install both MCPs globally
-npm install -g ai-expert-workflow-mcp task-master-ai
+# Install the AI Expert Workflow MCP
+npm install -g ai-expert-workflow-mcp
 
-# Make sure to set your API keys in your environment:
-# export OPENROUTER_API_KEY=your_openrouter_key_here  (for AI Expert Workflow)
-# export ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master AI)
-# export PERPLEXITY_API_KEY=your_perplexity_key_here  (optional, for Task Master AI research)
+# Make sure to set your OpenRouter API key in your environment:
+# export OPENROUTER_API_KEY=your_openrouter_key_here
 
 # Run the automated script with your project details (default model)
 npx ai-expert-workflow-generate "Your detailed project description"
 
 # Or specify a different model for more creative or complex projects
 MODEL=openai/gpt-4o npx ai-expert-workflow-generate "Your detailed project description"
-
-# Or use a faster model for simpler projects
-MODEL=anthropic/claude-3-haiku-20240307 npx ai-expert-workflow-generate "Your detailed project description"
 ```
 
 This script:
 1. Generates the PRD document based on your description
-2. Automatically saves it in Task Master compatible format
-3. Directly launches Task Master to parse the PRD and generate tasks
-4. Handles different environments (CLI vs Cursor) appropriately
+2. Automatically saves it in Task Master compatible format (at `scripts/prd.txt`)
+3. Provides instructions for using Task Master to parse the PRD
 
-The process is completely automatic - you don't need to manually ask Task Master to parse the PRD. If you're using the script in Cursor, it will provide the exact command you should use next.
+#### Using Task Master to Parse the PRD
+
+You can use Task Master in one of two ways:
+
+**Option 1: MCP Integration** (Recommended for Cursor users)
+1. Add the Task Master MCP to your editor configuration:
+   ```json
+   "mcpServers": {
+     "taskmaster-ai": {
+       "command": "npx",
+       "args": ["-y", "task-master-ai"],
+       "env": {
+         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
+         "MODEL": "claude-3-sonnet-20240229"
+       }
+     }
+   }
+   ```
+2. Then ask your AI assistant:
+   ```
+   Can you parse the PRD at scripts/prd.txt and generate tasks?
+   ```
+
+**Option 2: Command Line Usage**
+1. Install Task Master:
+   ```
+   npm install -g task-master-ai
+   ```
+2. Parse the PRD:
+   ```
+   task-master parse-prd scripts/prd.txt
+   ```
 
 ### Method 2: Manual Integration
 
@@ -344,20 +369,17 @@ For more control over the process:
    generateDocument productManager "Your project details" true
    ```
 
-2. This saves your PRD in a format that Task Master can parse and creates Cursor workflow documentation
+2. This saves your PRD in a format that Task Master can parse (at `scripts/prd.txt`)
 
-3. You can then use Task Master to create tasks:
-   ```
-   Can you parse the PRD at scripts/prd.txt and generate tasks?
-   ```
-
-4. Task Master will break down your PRD into actionable development tasks that you can track and implement
+3. Then use one of the Task Master methods described above to parse the PRD and create tasks.
 
 ## For More Information
 
 See the [Create-MCP.md](Create-MCP.md) file for a complete guide on creating your own AI Expert Workflow MCP server from scratch.
 
 For details on OpenRouter API integration, see [OPENROUTER.md](OPENROUTER.md).
+
+For Task Master AI documentation, see [Task Master on npm](https://www.npmjs.com/package/task-master-ai).
 
 ## License
 
