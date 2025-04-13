@@ -23,8 +23,8 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
          "command": "npx",
          "args": ["-y", "ai-expert-workflow-mcp"],
          "env": {
-           "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-           "MODEL": "claude-3-sonnet-20240229",
+           "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
+           "MODEL": "anthropic/claude-3-sonnet-20240229",
            "MAX_TOKENS": 8000,
            "TEMPERATURE": 0.7
          }
@@ -97,7 +97,8 @@ This streamlined workflow transforms your idea into a well-planned product and o
   - Product Requirements Document (PRD) with MVP focus and lean startup approach
   - UX Design Document with prototype descriptions and user testing plans
   - Software Architecture Specification with functional specifications and technical design
-- Seamless integration with Claude Task Master
+- Seamless integration with Task Master
+- Powered by OpenRouter API for maximum flexibility across AI models
 
 ## Benefits of Using AI Expert Workflow MCP
 
@@ -107,6 +108,7 @@ This streamlined workflow transforms your idea into a well-planned product and o
 - **Technical Excellence**: Design scalable architectures that meet your requirements
 - **Task Master Integration**: Convert your PRD directly into development tasks
 - **Cursor Integration**: Seamless workflow within your development environment
+- **OpenRouter Support**: Access various AI models through one unified API
 
 ## Installation
 
@@ -173,8 +175,8 @@ This makes the `ai-expert-workflow-mcp` command globally available in your termi
       "command": "npx",
       "args": ["-y", "ai-expert-workflow-mcp"],
       "env": {
-        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229",
+        "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
+        "MODEL": "anthropic/claude-3-sonnet-20240229",
         "MAX_TOKENS": 8000,
         "TEMPERATURE": 0.7
       }
@@ -266,6 +268,8 @@ The AI Expert Workflow seamlessly integrates with Task Master:
 ## For More Information
 
 See the [Create-MCP.md](Create-MCP.md) file for a complete guide on creating your own AI Expert Workflow MCP server from scratch.
+
+For details on OpenRouter API integration, see [OPENROUTER.md](OPENROUTER.md).
 
 ## License
 
