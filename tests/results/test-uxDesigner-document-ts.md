@@ -2,113 +2,115 @@
 
 ## User Personas
 
-### 1. Home Cook Helen
-- **Age:** 32
-- **Tech-savvy:** Moderate
-- **Goals:** Quickly find recipes using ingredients she already has.
-- **Frustrations:** Wasting food, complicated recipe apps, long data entry.
-- **Needs:** Easy ingredient input, fast recipe suggestions, clear shopping lists.
+### 1. Home Cook Hannah
+- **Age:** 28  
+- **Tech Savvy:** Medium  
+- **Goals:** Quickly find recipes using ingredients she already has, avoid food waste, save favorite recipes for later, and easily generate shopping lists for missing ingredients.
+- **Frustrations:** Complicated ingredient input, irrelevant recipe results, difficulty tracking what’s missing.
 
-### 2. Busy Professional Ben
-- **Age:** 28
-- **Tech-savvy:** High
-- **Goals:** Whip up meals with limited time and what’s available at home.
-- **Frustrations:** Tedious navigation, irrelevant recipe results, cluttered UI.
-- **Needs:** Efficient search, quick add-to-favorites, seamless shopping list generation.
+### 2. Busy Parent Ben
+- **Age:** 40  
+- **Tech Savvy:** Low-Medium  
+- **Goals:** Prepare meals efficiently, manage family dietary preferences, save tried-and-true recipes, and generate shopping lists for grocery runs.
+- **Frustrations:** Overly complex interfaces, hard-to-find save or shopping list features.
 
-### 3. Student Sam
-- **Age:** 20
-- **Tech-savvy:** Moderate
-- **Goals:** Cook simple meals on a budget using leftover ingredients.
-- **Frustrations:** Complicated apps, too many choices, missing ingredients.
-- **Needs:** Intuitive ingredient entry, clear indicators of missing ingredients, simple shopping list export.
+### 3. Beginner Cook Chloe
+- **Age:** 22  
+- **Tech Savvy:** High  
+- **Goals:** Discover easy-to-make recipes, input random ingredients, save favorites, and get clear shopping lists.
+- **Frustrations:** Overwhelming information, unclear steps or missing features.
 
 ---
 
 ## User Journey Maps
 
-### Journey 1: Find a Recipe with Available Ingredients
-1. **Open App** → Home screen with ingredient search prompt.
-2. **Input Ingredients** → Search bar with type-ahead suggestions and option to scan barcodes or select from common items.
-3. **View Recipe Suggestions** → List of recipes, sorted by best match (most ingredients available).
-4. **Select Recipe** → View recipe details, see which ingredients are missing.
-5. **Add to Favorites** → Save recipe for future use.
+### Journey 1: Ingredient-Based Search and Recipe Discovery
+1. **Open App**
+2. **Input Ingredients:** Uses search bar or ingredient picker to add what’s available.
+3. **View Matching Recipes:** Sees list of recipes filtered by input ingredients.
+4. **Select Recipe:** Taps on a recipe for more details.
+5. **See Missing Ingredients:** Clearly view what’s missing.
+6. **Add to Shopping List:** Option to add missing ingredients to a shopping list.
+7. **Save Recipe:** Option to favorite or bookmark recipe.
 
-### Journey 2: Generate Shopping List for a Recipe
-1. **Select Recipe** → Recipe details page.
-2. **View Missing Ingredients** → Clearly displayed, with checkboxes.
-3. **Generate Shopping List** → One-tap to add all missing items to a shopping list.
-4. **Save/Share Shopping List** → Ability to view, check off, or share the list.
+### Journey 2: Favorite Recipes Management
+1. **Browse or Search Recipes**
+2. **Save/Favorite Recipe:** Tap heart/star icon.
+3. **Access Favorites:** Go to ‘Favorites’ section for quick access.
 
-### Journey 3: Manage Favorites
-1. **View Favorites** → Access via bottom navigation.
-2. **Browse Saved Recipes** → Grid/list view of favorites.
-3. **Select Favorite Recipe** → See ingredients, steps, and generate shopping list if needed.
+### Journey 3: Shopping List Generation
+1. **View Recipe Details**
+2. **See Missing Ingredients Highlighted**
+3. **Generate Shopping List:** Tap to add missing items to a new or existing shopping list.
+4. **View/Manage Shopping List:** Access list to check off items while shopping.
 
 ---
 
 ## Information Architecture
 
 - **Home**
-  - Ingredient Search
-  - Recent Searches
-  - Suggested Ingredients
-- **Recipes**
-  - Recipe List (search results)
-  - Recipe Detail
-    - Ingredients (available/missing)
-    - Steps
-    - Save to Favorites
-    - Generate Shopping List
+    - Ingredient Input
+    - Suggested Ingredients
+    - Recent Searches
+- **Recipe Results**
+    - Filtered by available ingredients
+    - Filters (prep time, dietary needs, cuisine, etc.)
+- **Recipe Details**
+    - Ingredients (with missing ones highlighted)
+    - Steps/Instructions
+    - Save/Favorite Button
+    - Add Missing to Shopping List
 - **Favorites**
-  - List of Saved Recipes
-  - Quick access to recipe details
+    - List of favorited recipes
 - **Shopping List**
-  - Auto-generated from missing ingredients
-  - Manual edit/add/remove items
-  - Export/share option
-- **Profile/Settings**
-  - Manage account
-  - Preferences (dietary, allergens, etc.)
+    - Auto-generated from missing ingredients
+    - Manual add/remove/edit items
 
 ---
 
 ## Wireframe Descriptions
 
-### 1. Home / Ingredient Search Screen
-- **Ingredient Input Field:** Prominent, with placeholder text (e.g., "What ingredients do you have?").
-- **Add Ingredient Button:** Plus icon, supports manual entry, voice, and barcode scan.
-- **Suggested Ingredients:** Quick-select chips for common items.
-- **Recent Searches:** Below ingredient field for quick re-entry.
+### 1. Home Screen
+- **Ingredient Input Field:** Prominent at the top, allows typing or choosing from a list.
+- **Suggested Ingredients:** Quick access buttons for common ingredients.
+- **Recent Searches:** Easy access below the input field.
 
 ### 2. Recipe Results Screen
-- **Recipe Cards:** Image, title, match percentage (e.g., "You have 7/8 ingredients"), and quick save button.
-- **Filter/Sort Options:** By match quality, prep time, dietary preference.
+- **Recipe Cards:** Show recipe name, image, time, and how many of the user’s ingredients are matched.
+- **Filters Bar:** For additional sorting or filtering.
 
 ### 3. Recipe Detail Screen
 - **Recipe Image and Title**
-- **Ingredients List:** Two sections – "You Have" (checked), "You Need" (unchecked, with ‘Add to Shopping List’).
-- **Steps:** Clear, numbered.
-- **Save to Favorites:** Heart icon.
-- **Generate Shopping List:** Prominent button if ingredients are missing.
+- **Ingredients List:** Show which are available (checked), and which are missing (highlighted with an ‘Add to Shopping List’ button).
+- **Instructions Section:** Step-by-step, easy to follow.
+- **Save/Favorite Icon:** Star or heart, easy to tap.
+- **Generate Shopping List Button**
 
 ### 4. Favorites Screen
-- **Grid/List of Recipes:** Thumbnail, title, quick access to details.
+- **List/Grid of Saved Recipes:** With quick access to details or remove from favorites.
 
 ### 5. Shopping List Screen
-- **List of Items:** Checkboxes, grouped by category (produce, dairy, etc.).
-- **Edit Options:** Add/remove items, clear all.
-- **Share/Export:** Button to send via SMS, email, or other apps.
+- **List of Items:** Checkboxes for each, option to add or remove items.
+- **Share/Export Option:** Send list via text or other apps.
 
 ---
 
 ## Prototype Plan
 
-- **Clickable Prototype Tools:** Figma, Adobe XD, or InVision.
-- **Flow to Include:**
-  - Ingredient entry (manual, voice, barcode) on Home.
-  - Transition to Recipe Results after ingredient selection.
-  - Tapping a recipe card opens Recipe Detail, displaying available and missing ingredients.
-  - Generate and view Shopping List from missing ingredients.
-  - Save recipes to and access from Favorites.
-  - Edit and share Shopping List.
+- **Home Screen:** Enable ingredient input (manual and suggested), show real-time recipe results upon entry.
+- **Recipe Results:** Allow tapping recipe cards to open detail view.
+- **Recipe Detail:** Highlight missing ingredients, provide tap-to-add to shopping list, and save/favorite functionality.
+- **Favorites:** View and manage saved recipes.
+- **Shopping List:** Add, remove, and check off items; generate from recipe details.
+- **Navigation:** Simple bottom tab bar or hamburger menu for navigation between main sections.
+
+**Prototype flow:**  
+1. Start on Home, input ingredients.  
+2. Instantly see matching recipes.  
+3. Tap a recipe, review details, see missing ingredients.  
+4. Save favorite or generate shopping list from missing ingredients.  
+5. View/manage shopping list and favorites from bottom navigation.
+
+---
+
+**Next steps:** Design low-fidelity wireframes for key screens

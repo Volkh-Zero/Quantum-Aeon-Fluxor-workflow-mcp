@@ -12,12 +12,13 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
 
 1. Install both MCPs globally:
    ```bash
-   npm install -g ai-expert-workflow-mcp task-master-mcp
+   npm install -g ai-expert-workflow-mcp task-master-ai
    ```
 
 2. Get the required API keys:
    - **OpenRouter API key** for AI Expert Workflow: [Get one here](https://openrouter.ai/keys)
-   - **Anthropic API key** for Task Master: [Get one here](https://console.anthropic.com/)
+   - **Anthropic API key** for Task Master AI: [Get one here](https://console.anthropic.com/)
+   - **Perplexity API key** (optional) for Task Master AI enhanced research capability: [Get one here](https://docs.perplexity.ai/docs/getting-started)
 
 3. Configure your Cursor settings with both MCPs:
    ```json
@@ -38,7 +39,13 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
          "args": ["-y", "task-master-mcp"],
          "env": {
            "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-           "MODEL": "claude-3-sonnet-20240229"
+           "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
+           "MODEL": "claude-3-sonnet-20240229",
+           "PERPLEXITY_MODEL": "sonar-pro",
+           "MAX_TOKENS": 64000,
+           "TEMPERATURE": 0.2,
+           "DEFAULT_SUBTASKS": 5,
+           "DEFAULT_PRIORITY": "medium"
          }
        }
      }
@@ -60,11 +67,12 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
 #### Option 1: Fully Automated Workflow (Recommended)
 ```bash
 # Install the necessary packages globally
-npm install -g ai-expert-workflow-mcp task-master-mcp
+npm install -g ai-expert-workflow-mcp task-master-ai
 
 # Make sure to set your API keys in your environment or .env file:
 # OPENROUTER_API_KEY=your_openrouter_key_here  (for AI Expert Workflow)
 # ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master)
+# PERPLEXITY_API_KEY=your_perplexity_key_here  (optional, for Task Master AI research)
 
 # Generate PRD and automatically parse it into tasks with one command
 # You can specify a different model with the MODEL environment variable
@@ -226,7 +234,13 @@ This makes the `ai-expert-workflow-mcp` command globally available in your termi
       "args": ["-y", "task-master-mcp"],
       "env": {
         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229"
+        "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
+        "MODEL": "claude-3-sonnet-20240229",
+        "PERPLEXITY_MODEL": "sonar-pro",
+        "MAX_TOKENS": 64000,
+        "TEMPERATURE": 0.2,
+        "DEFAULT_SUBTASKS": 5,
+        "DEFAULT_PRIORITY": "medium"
       }
     }
   }
@@ -287,7 +301,8 @@ The AI Expert Workflow seamlessly integrates with Task Master in two ways:
 
 > **Note:** You will need both API keys for the full workflow:
 > - **OpenRouter API key** for AI Expert Workflow (get one from [OpenRouter](https://openrouter.ai/keys))
-> - **Anthropic API key** for Task Master (get one from [Anthropic](https://console.anthropic.com/))
+> - **Anthropic API key** for Task Master AI (get one from [Anthropic](https://console.anthropic.com/))
+> - **Perplexity API key** (optional) for Task Master AI enhanced research capabilities (get one from [Perplexity](https://docs.perplexity.ai/docs/getting-started))
 
 ### Method 1: Fully Automated Integration (Recommended)
 
@@ -295,11 +310,12 @@ Use the provided script to automate the entire process:
 
 ```bash
 # Install both MCPs globally
-npm install -g ai-expert-workflow-mcp task-master-mcp
+npm install -g ai-expert-workflow-mcp task-master-ai
 
 # Make sure to set your API keys in your environment:
 # export OPENROUTER_API_KEY=your_openrouter_key_here  (for AI Expert Workflow)
-# export ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master)
+# export ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master AI)
+# export PERPLEXITY_API_KEY=your_perplexity_key_here  (optional, for Task Master AI research)
 
 # Run the automated script with your project details (default model)
 npx ai-expert-workflow-generate "Your detailed project description"

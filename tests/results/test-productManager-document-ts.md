@@ -2,76 +2,62 @@
 
 ## Product Overview
 
-The Recipe Finder app is a mobile and web application designed to help home cooks discover recipes based on the ingredients they already have at home. By simply inputting available ingredients, users can receive personalized recipe suggestions, helping them reduce food waste, save money, and make meal planning easier.
+The Recipe Finder app is a mobile and web application designed to help home cooks discover recipes based on the ingredients they already have at home. By allowing users to input available ingredients, the app suggests relevant recipes, enabling users to reduce food waste and save money by making the most of what they own.
 
 ## Problem Statement
 
-Home cooks often struggle to decide what to cook, especially when they want to use up ingredients on hand to avoid waste and unnecessary grocery trips. Existing recipe apps typically require users to search by recipe or cuisine, rather than by available ingredients, leading to unused groceries and increased food waste. There is a need for a user-friendly solution that enables users to quickly find recipes that utilize what they already have at home.
+Many home cooks face the challenge of having leftover or unused ingredients, which often leads to food waste and unnecessary grocery expenses. Existing recipe apps typically require users to shop for new ingredients, rather than making use of what is already available. There is a need for a solution that empowers users to efficiently utilize their pantry, fridge, and freezer contents to create delicious meals.
 
 ## User Personas
 
-### 1. Busy Parents
-- Age: 30-45
-- Cook for: Family (2-5 people)
-- Needs: Quick meal ideas, minimize grocery trips, use up perishable items
+### 1. Busy Professionals
+- Age: 25–45
+- Needs: Quick meal solutions based on limited or random ingredients at home
+- Motivations: Save time and money, minimize food waste
 
-### 2. Young Professionals
-- Age: 22-35
-- Cook for: Themselves or roommates
-- Needs: Cost-effective meals, reduce food waste, simple recipes
+### 2. Family Cooks
+- Age: 30–55
+- Needs: Plan meals for a family using pantry staples and leftovers
+- Motivations: Reduce grocery bills, promote sustainability, minimize waste
 
-### 3. Budget-Conscious Students
-- Age: 18-25
-- Cook for: Themselves, sometimes friends
-- Needs: Cheap recipes using limited ingredients, avoid buying extra groceries
-
-### 4. Eco-Conscious Individuals
-- Age: 25-50
-- Cook for: Themselves or family
-- Needs: Reduce food waste, sustainable cooking habits, maximize use of leftovers
+### 3. Students & Young Adults
+- Age: 18–30
+- Needs: Cook on a budget with what’s on hand
+- Motivations: Save money, learn to cook, avoid wasting food
 
 ## Feature Requirements
 
 1. **Ingredient Input**
-   - Allow users to manually enter or select ingredients they have at home.
-   - Option to save frequently used ingredients for quick access.
+   - Easy entry of available ingredients via text, voice, or barcode scanner
+   - Ability to save frequently used ingredients or pantry lists
 
-2. **Recipe Search by Ingredients**
-   - Generate recipe suggestions that match the user's available ingredients.
-   - Indicate recipes that require only the ingredients the user has, and those that need just 1-2 extra items.
+2. **Recipe Search & Suggestions**
+   - Recipe recommendations based on the provided ingredients
+   - Option to filter recipes by meal type, dietary preferences, preparation time, and difficulty level
 
-3. **Recipe Details**
-   - Show step-by-step instructions, prep/cook time, difficulty level, and nutritional information.
-   - Highlight which ingredients are in the user’s list and which are missing.
+3. **Missing Ingredient Handling**
+   - Highlight recipes that require only one or two additional ingredients
+   - Suggest simple substitutions for missing items
 
-4. **Shopping List Generator**
-   - Automatically create a shopping list for missing ingredients if the user wants to try a recipe that requires extras.
+4. **Recipe Details**
+   - Clear instructions, prep/cook times, and serving sizes
+   - Photos and user ratings/reviews
 
-5. **User Profiles**
-   - Allow users to create accounts to save ingredient lists, favorite recipes, and dietary preferences.
+5. **Save & Share Recipes**
+   - Save favorite recipes and create a personal cookbook
+   - Share recipes with friends or family via social media or messaging
 
-6. **Personalization and Filters**
-   - Filter recipes by dietary restrictions (e.g., vegetarian, vegan, gluten-free).
-   - Sort recipes by cook time, cuisine, and meal type.
-
-7. **Recipe Rating & Feedback**
-   - Enable users to rate recipes and leave feedback for others.
+6. **User Accounts (Optional for MVP)**
+   - Allow users to create profiles for saving preferences and history
 
 ## MVP Definition
 
-The Minimum Viable Product (MVP) will include the following core features:
+The Minimum Viable Product (MVP) for the Recipe Finder app will include:
 
-1. **Ingredient Input**
-   - Manual entry and selection from a common ingredients list.
-   
-2. **Recipe Search by Ingredients**
-   - Generate and display recipes that match the user's inputted ingredients.
-   - Highlight recipes that can be made with available ingredients, and those needing up to 2 extra items.
+- **Ingredient Input:** Manual text entry of ingredients with option to edit/delete.
+- **Recipe Search & Suggestions:** Functional recipe recommendation engine based on user-provided ingredients.
+- **Recipe Details:** Display full recipe information, including instructions and images.
+- **Save Recipes:** Ability for users to bookmark/save favorite recipes for quick access.
+- **Basic Filters:** Filter recipes by meal type (breakfast, lunch, dinner).
 
-3. **Recipe Details**
-   - Show basic recipe instructions, ingredient list, and prep/cook time.
-
-4. **Basic User Profile**
-   - Save ingredient lists and favorite recipes.
-
-The MVP will focus on a simple, intuitive interface for entering ingredients and viewing recipe matches, ensuring users can quickly find recipes that help them use what they already have and reduce food waste. Advanced features like shopping lists, dietary filters, and ratings can be added in future releases.
+Advanced features such as voice or barcode input, substitution suggestions, user accounts, and sharing functionality are out of scope for the MVP but prioritized for future releases.
