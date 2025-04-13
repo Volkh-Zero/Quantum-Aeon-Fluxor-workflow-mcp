@@ -191,12 +191,22 @@ export function createMCPServer() {
       log('Registering expertWorkflow tool');
       server.tool('expertWorkflow', {
         type: 'object',
-        properties: {},
-        required: []
-      }, async () => {
-        log('expertWorkflow tool called');
-        return {
-          content: [{ type: 'text', text: `# AI Expert Workflow
+        properties: {
+          random_string: {
+            type: 'string',
+            description: 'Dummy parameter for no-parameter tools'
+          }
+        },
+        required: ['random_string']
+      }, async (params: { random_string: string }) => {
+        log('expertWorkflow tool called with params:', params);
+        
+        try {
+          const { random_string } = params;
+          log('Processing request with input:', random_string);
+          
+          return {
+            content: [{ type: 'text', text: `# AI Expert Workflow
 
 This workflow helps you develop your project through three expert consultations:
 
@@ -241,7 +251,13 @@ Once you have your PRD saved, you can use Task Master to create tasks with:
    \`\`\`
    Can you parse the PRD at scripts/prd.txt and generate tasks?
    \`\`\`` }]
-        };
+          };
+        } catch (error) {
+          logError('Error in expertWorkflow tool:', error);
+          return {
+            error: `Error executing expertWorkflow: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       });
     } catch (error) {
       logError('Failed to register expertWorkflow tool:', error);
