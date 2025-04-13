@@ -105,13 +105,13 @@ export function createMCPServer() {
           expert.initialQuestions.forEach((q: string, i: number) => {
             response += `${i+1}. ${q}\n`;
           });
-          return { content: [{ type: 'text', text: response }] };
+          return { content: response };
         }
 
         try {
           const aiResponse = await consultWithExpert(role, projectInfo);
           return {
-            content: [{ type: 'text', text: `# Consultation with ${expert.title}\n\n${aiResponse}` }]
+            content: `# Consultation with ${expert.title}\n\n${aiResponse}`
           };
         } catch (error) {
           logError('Error in consultExpert:', error);
@@ -173,7 +173,7 @@ export function createMCPServer() {
           }
 
           return {
-            content: [{ type: 'text', text: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}` }]
+            content: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}`
           };
         } catch (error) {
           logError('Error in generateDocument:', error);
@@ -205,8 +205,8 @@ export function createMCPServer() {
           const { random_string } = params;
           log('Processing request with input:', random_string);
           
-          return {
-            content: [{ type: 'text', text: `# AI Expert Workflow
+          // Use a simpler response format - just text string instead of array
+          const responseText = `# AI Expert Workflow
 
 This workflow helps you develop your project through three expert consultations:
 
@@ -250,10 +250,12 @@ The \`true\` parameter at the end saves the PRD in a format that Task Master can
 Once you have your PRD saved, you can use Task Master to create tasks with:
    \`\`\`
    Can you parse the PRD at scripts/prd.txt and generate tasks?
-   \`\`\`` }]
-          };
+   \`\`\``;
+
+          // Try a different response format that might be more compatible
+          return { content: responseText };
         } catch (error) {
-          logError('Error in expertWorkflow tool:', error);
+          logError('Error in expertWorkflow:', error);
           return {
             error: `Error executing expertWorkflow: ${error instanceof Error ? error.message : String(error)}`
           };
