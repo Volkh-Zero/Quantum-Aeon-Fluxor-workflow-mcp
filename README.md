@@ -1,5 +1,7 @@
 # AI Expert Workflow MCP
 
+[![npm version](https://badge.fury.io/js/ai-expert-workflow-mcp.svg)](https://badge.fury.io/js/ai-expert-workflow-mcp)
+
 An MCP server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities.
 
 ## 🚀 Quick Start for End Users
@@ -108,6 +110,16 @@ This streamlined workflow transforms your idea into a well-planned product and o
 
 ## Installation
 
+### Global Installation (Recommended)
+
+The easiest way to use AI Expert Workflow MCP is to install it directly from npm:
+
+```bash
+npm install -g ai-expert-workflow-mcp
+```
+
+This makes the `ai-expert-workflow-mcp` command globally available in your terminal.
+
 ### Local Development
 
 1. Clone the repository:
@@ -149,12 +161,6 @@ This streamlined workflow transforms your idea into a well-planned product and o
    ```
 
    Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`.
-
-### Global Installation
-
-```
-npm install -g ai-expert-workflow-mcp
-```
 
 ## Usage with Cursor AI
 
