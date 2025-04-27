@@ -6,7 +6,7 @@ This guide explains how to clone, build, and publish the AI Expert Workflow MCP 
 
 - Node.js (v16+)
 - npm (v7+)
-- Anthropic API key
+- OpenRouter API key (get one from https://openrouter.ai/keys)
 - GitHub account (for forking/publishing)
 - npm account (for publishing to npm registry)
 
@@ -35,15 +35,16 @@ Create a `.env` file based on the example:
 cp .env.example .env
 ```
 
-Edit the `.env` file and add your Anthropic API key:
+Edit the `.env` file and add your OpenRouter API key:
 
 ```
-# Anthropic API Key (Required)
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+# OpenRouter configuration
+# IMPORTANT: Replace this with your own API key from https://openrouter.ai/keys
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 
 # Model settings
-MODEL=claude-3-sonnet-20240229
-MAX_TOKENS=8000
+OPENROUTER_MODEL=tngtech/deepseek-r1t-chimera:free
+MAX_TOKENS=4000
 TEMPERATURE=0.7
 ```
 

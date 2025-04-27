@@ -1,6 +1,6 @@
 # AI Expert Workflow MCP
 
-An MCP server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities.
+An MCP (Model Control Plane) server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities. This project allows you to consult with AI experts in product management, UX design, and software architecture to plan and develop your projects.
 
 ## 🚀 Quick Start for End Users
 
@@ -21,8 +21,8 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
          "command": "npx",
          "args": ["-y", "ai-expert-workflow-mcp"],
          "env": {
-           "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-           "MODEL": "claude-3-sonnet-20240229",
+           "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
+           "OPENROUTER_MODEL": "openai/gpt-4-turbo",
            "MAX_TOKENS": 8000,
            "TEMPERATURE": 0.7
          }
@@ -31,8 +31,10 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
          "command": "npx",
          "args": ["-y", "task-master-mcp"],
          "env": {
-           "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-           "MODEL": "claude-3-sonnet-20240229"
+           "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
+           "OPENROUTER_MODEL": "openai/gpt-4-turbo",
+           "MAX_TOKENS": 8000,
+           "TEMPERATURE": 0.7
          }
        }
      }
@@ -146,9 +148,28 @@ This streamlined workflow transforms your idea into a well-planned product and o
    # Or use the shell scripts
    ./tests/run-js-test.sh
    ./tests/run-ts-test.sh
+
+   # Run comprehensive tests (builds and runs both JS and TS tests)
+   ./tests/run-comprehensive-test.sh
    ```
 
    Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`.
+
+   > **IMPORTANT**: The tests will fail with the default API key. To verify your OpenRouter API key without modifying the `.env` file, use one of these scripts:
+   >
+   > Verify and update in one step:
+   > ```
+   > npm run verify-and-update YOUR_API_KEY
+   > ```
+   >
+   > Or run the steps separately:
+   > ```
+   > # Verify your API key
+   > npm run verify-openrouter YOUR_API_KEY
+   >
+   > # Update the MCP configuration
+   > npm run update-config YOUR_API_KEY
+   > ```
 
 ### Global Installation
 
@@ -164,25 +185,26 @@ npm install -g ai-expert-workflow-mcp
 {
   "mcpServers": {
     "ai-expert-workflow": {
-      "command": "npx",
-      "args": ["-y", "ai-expert-workflow-mcp"],
+      "command": "node",
+      "args": ["dist/index.js"],
+      "cwd": "${workspaceFolder}",
       "env": {
-        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229",
-        "MAX_TOKENS": 8000,
-        "TEMPERATURE": 0.7
+        "OPENROUTER_API_KEY": "${env:OPENROUTER_API_KEY}",
+        "OPENROUTER_MODEL": "openai/gpt-4-turbo",
+        "MAX_TOKENS": 4000,
+        "TEMPERATURE": 0.7,
+        "MCP_TIMEOUT": "120000",
+        "DEBUG": "mcp"
       }
     },
     "taskmaster-ai": {
       "command": "npx",
       "args": ["-y", "task-master-mcp"],
       "env": {
-        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
-        "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
-        "MODEL": "claude-3-sonnet-20240229",
-        "PERPLEXITY_MODEL": "sonar-pro",
-        "MAX_TOKENS": 64000,
-        "TEMPERATURE": 0.2,
+        "OPENROUTER_API_KEY": "${env:OPENROUTER_API_KEY}",
+        "OPENROUTER_MODEL": "openai/gpt-4-turbo",
+        "MAX_TOKENS": 8000,
+        "TEMPERATURE": 0.7,
         "DEFAULT_SUBTASKS": 5,
         "DEFAULT_PRIORITY": "medium"
       }
@@ -256,6 +278,15 @@ The AI Expert Workflow seamlessly integrates with Task Master:
    ```
 
 4. Task Master will break down your PRD into actionable development tasks that you can track and implement
+
+### Utility Scripts
+
+The project includes utility scripts to demonstrate Task Master integration:
+
+- `generate-task-master-files.js`: Creates sample PRD and Task Master integration files using the MCP implementation
+- `generate-task-master-files-simple.js`: Creates sample PRD and Task Master integration files without using MCP
+
+These scripts are useful for testing and understanding how the integration works.
 
 ## For More Information
 

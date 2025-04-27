@@ -12,7 +12,16 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "prepare": "npm run build",
     "test": "node tests/test-openrouter.js",
-    "test:ts": "ts-node tests/test-openrouter.ts"
+    "test:ts": "ts-node tests/test-openrouter.ts",
+    "test:all": "bash tests/run-comprehensive-test.sh",
+    "test:js": "bash tests/run-js-test.sh",
+    "test:mcp": "node dist/index.js",
+    "verify-openrouter": "node tests/verify-openrouter.js",
+    "update-config": "node tests/update-mcp-config.js",
+    "verify-and-update": "bash tests/verify-and-update.sh",
+    "verify-env": "node tests/verify-env-model.js",
+    "test:real-mcp": "node tests/test-real-mcp.js",
+    "check-sdk": "node tests/check-mcp-sdk.js"
   },
   "keywords": [
     "ai",

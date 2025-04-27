@@ -13,14 +13,20 @@ To use both MCPs together, add both to your editor configuration:
       "command": "npx",
       "args": ["-y", "ai-expert-workflow-mcp"],
       "env": {
-        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE"
+        "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
+        "OPENROUTER_MODEL": "tngtech/deepseek-r1t-chimera:free",
+        "MAX_TOKENS": 4000,
+        "TEMPERATURE": 0.7
       }
     },
     "taskmaster-ai": {
       "command": "npx",
       "args": ["-y", "task-master-mcp"],
       "env": {
-        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE"
+        "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
+        "MODEL": "claude-3-sonnet-20240229",
+        "MAX_TOKENS": 8000,
+        "TEMPERATURE": 0.7
       }
     }
   }
@@ -86,4 +92,4 @@ Task Master: [Provides guidance on implementing the specific task]
 2. **Review generated documents** before using them with Task Master
 3. **Be specific about file paths** when asking Task Master to parse documents
 4. **Use Task Master's task tracking** to manage your implementation progress
-5. **Iterate as needed** between experts as your project evolves 
+5. **Iterate as needed** between experts as your project evolves

@@ -10,10 +10,10 @@ This project uses [OpenRouter](https://openrouter.ai/) as its AI provider, which
 
 ```
 OPENROUTER_API_KEY=your_api_key_here
-OPENROUTER_MODEL=anthropic/claude-3-haiku-20240307
+OPENROUTER_MODEL=tngtech/deepseek-r1t-chimera:free
 ```
 
-You can change the model to any model supported by OpenRouter. See the [list of available models](https://openrouter.ai/models).
+This project uses the `tngtech/deepseek-r1t-chimera:free` model by default, which provides good performance while being cost-effective. You can change the model to any model supported by OpenRouter. See the [list of available models](https://openrouter.ai/models).
 
 ## Using OpenRouter in Your Code
 
