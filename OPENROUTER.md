@@ -58,17 +58,41 @@ These tests verify:
 
 ## Available Models
 
-OpenRouter supports many models, including:
+OpenRouter supports dozens of models from multiple providers. Here's a guide to help you choose the right model for your use case:
 
-- `anthropic/claude-3-opus-20240229`
-- `anthropic/claude-3-sonnet-20240229`
-- `anthropic/claude-3-haiku-20240307`
-- `openai/gpt-4o`
-- `openai/gpt-4-turbo`
-- `openai/gpt-3.5-turbo`
-- And many more
+### For Complex Planning and Strategy Tasks
 
-For a complete list, see [https://openrouter.ai/models](https://openrouter.ai/models).
+These powerful models excel at product planning, architectural design, and UX strategy:
+
+- `anthropic/claude-3-opus-20240229` - Claude's most powerful model, excellent for detailed PRDs
+- `openai/gpt-4o` - OpenAI's most capable model, especially good at reasoning
+- `meta/llama-3-70b-instruct` - Meta's largest open model, very capable for planning
+
+### For Balanced Performance
+
+Great everyday models that balance capability with efficiency:
+
+- `anthropic/claude-3-sonnet-20240229` - Claude's mid-tier model, good all-around choice
+- `mistral/mistral-large` - Excellent performance-to-cost ratio
+- `google/gemini-pro` - Google's flagship model, strong at a variety of tasks
+
+### For Quick Iterations and Testing
+
+Fast, cost-effective models for rapid development:
+
+- `anthropic/claude-3-haiku-20240307` - Claude's fastest model
+- `openai/gpt-3.5-turbo` - Very fast responses, good for simple tasks
+- `mistral/mistral-medium` - Good middle ground for speed and capability
+
+### Specialized Models
+
+- `perplexity/sonar-medium-online` - Internet-connected model, good for research
+- `cohere/command-r` - Excellent for document analysis
+- `deepseek/deepseek-coder` - Specialized for code generation
+
+You can set the model via the `MODEL` environment variable or in your `.env` file as `OPENROUTER_MODEL`.
+
+For the complete, up-to-date list with pricing information, see [https://openrouter.ai/models](https://openrouter.ai/models).
 
 ## API Reference
 

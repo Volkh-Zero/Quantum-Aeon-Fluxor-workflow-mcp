@@ -1,5 +1,7 @@
 # AI Expert Workflow MCP
 
+[![npm version](https://badge.fury.io/js/ai-expert-workflow-mcp.svg)](https://badge.fury.io/js/ai-expert-workflow-mcp)
+
 An MCP (Model Control Plane) server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities. This project allows you to consult with AI experts in product management, UX design, and software architecture to plan and develop your projects.
 
 ## 🚀 Quick Start for End Users
@@ -10,10 +12,15 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
 
 1. Install both MCPs globally:
    ```bash
-   npm install -g ai-expert-workflow-mcp task-master-mcp
+   npm install -g ai-expert-workflow-mcp task-master-ai
    ```
 
-2. Configure your Cursor settings with both MCPs:
+2. Get the required API keys:
+   - **OpenRouter API key** for AI Expert Workflow: [Get one here](https://openrouter.ai/keys)
+   - **Anthropic API key** for Task Master AI: [Get one here](https://console.anthropic.com/)
+   - **Perplexity API key** (optional) for Task Master AI enhanced research capability: [Get one here](https://docs.perplexity.ai/docs/getting-started)
+
+3. Configure your Cursor settings with both MCPs:
    ```json
    {
      "mcpServers": {
@@ -22,28 +29,63 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
          "args": ["-y", "ai-expert-workflow-mcp"],
          "env": {
            "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
-           "OPENROUTER_MODEL": "openai/gpt-4-turbo",
+           "OPENROUTER_MODEL": "tngtech/deepseek-r1t-chimera:free",
            "MAX_TOKENS": 8000,
            "TEMPERATURE": 0.7
          }
        },
        "taskmaster-ai": {
          "command": "npx",
-         "args": ["-y", "task-master-mcp"],
+         "args": ["-y", "task-master-ai"],
          "env": {
-           "OPENROUTER_API_KEY": "YOUR_OPENROUTER_API_KEY_HERE",
-           "OPENROUTER_MODEL": "openai/gpt-4-turbo",
-           "MAX_TOKENS": 8000,
-           "TEMPERATURE": 0.7
+           "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
+           "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
+           "MODEL": "claude-3-sonnet-20240229",
+           "PERPLEXITY_MODEL": "sonar-pro",
+           "MAX_TOKENS": 64000,
+           "TEMPERATURE": 0.2,
+           "DEFAULT_SUBTASKS": 5,
+           "DEFAULT_PRIORITY": "medium"
          }
        }
      }
    }
    ```
 
+   Note on models: With OpenRouter, you can choose from many AI models beyond Claude:
+   - For creative tasks: `openai/gpt-4o`, `anthropic/claude-3-opus-20240229`
+   - For balanced performance: `anthropic/claude-3-sonnet-20240229`, `mistral/mistral-large`
+   - For faster, cost-effective options: `openai/gpt-3.5-turbo`, `anthropic/claude-3-haiku-20240307`
+   - Other options: `google/gemini-pro`, `meta/llama-3-70b`, `cohere/command-r`
+
+   See the [complete list of OpenRouter models](https://openrouter.ai/models) for all available options.
+
 3. Enable the MCPs in your Cursor settings.
 
 ### Complete Workflow Example
+
+#### Option 1: Fully Automated Workflow (Recommended)
+```bash
+# Install the necessary packages globally
+npm install -g ai-expert-workflow-mcp task-master-ai
+
+# Make sure to set your API keys in your environment or .env file:
+# OPENROUTER_API_KEY=your_openrouter_key_here  (for AI Expert Workflow)
+# ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master)
+# PERPLEXITY_API_KEY=your_perplexity_key_here  (optional, for Task Master AI research)
+
+# Generate PRD and automatically parse it into tasks with one command
+# You can specify a different model with the MODEL environment variable
+MODEL=openai/gpt-4o npx ai-expert-workflow-generate "I want to build a recipe app that helps users find recipes based on ingredients they already have at home. Target users are home cooks who want to reduce food waste and save money."
+```
+
+This single command will:
+1. Generate a comprehensive PRD document based on your description
+2. Save it in a format compatible with Task Master
+3. Automatically launch Task Master to parse the PRD and create tasks
+4. Display the tasks and next steps
+
+#### Option 2: Interactive Conversation Workflow
 
 #### Step 1: Plan your Product with the AI Product Manager
 ```
@@ -97,7 +139,11 @@ This streamlined workflow transforms your idea into a well-planned product and o
   - Product Requirements Document (PRD) with MVP focus and lean startup approach
   - UX Design Document with prototype descriptions and user testing plans
   - Software Architecture Specification with functional specifications and technical design
-- Seamless integration with Claude Task Master
+- Seamless integration with Task Master
+- Powered by OpenRouter API for maximum flexibility across AI models:
+  - Works with OpenAI models (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
+  - Works with Anthropic models (Claude 3 Opus, Sonnet, Haiku)
+  - Works with other models (Google Gemini, Mistral, Llama, Cohere, etc.)
 
 ## Benefits of Using AI Expert Workflow MCP
 
@@ -107,8 +153,22 @@ This streamlined workflow transforms your idea into a well-planned product and o
 - **Technical Excellence**: Design scalable architectures that meet your requirements
 - **Task Master Integration**: Convert your PRD directly into development tasks
 - **Cursor Integration**: Seamless workflow within your development environment
+- **Model Flexibility**: Choose from dozens of AI models through OpenRouter API
+  - Use high-performance models (Claude Opus, GPT-4o) for complex planning
+  - Use balanced models (Claude Sonnet, Mistral) for everyday work
+  - Use fast models (Claude Haiku, GPT-3.5) for quick iterations
 
 ## Installation
+
+### Global Installation (Recommended)
+
+The easiest way to use AI Expert Workflow MCP is to install it directly from npm:
+
+```bash
+npm install -g ai-expert-workflow-mcp
+```
+
+This makes the `ai-expert-workflow-mcp` command globally available in your terminal.
 
 ### Local Development
 
@@ -155,6 +215,7 @@ This streamlined workflow transforms your idea into a well-planned product and o
 
    Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`.
 
+
    > **IMPORTANT**: The tests will fail with the default API key. To verify your OpenRouter API key without modifying the `.env` file, use one of these scripts:
    >
    > Verify and update in one step:
@@ -170,13 +231,6 @@ This streamlined workflow transforms your idea into a well-planned product and o
    > # Update the MCP configuration
    > npm run update-config YOUR_API_KEY
    > ```
-
-### Global Installation
-
-```
-npm install -g ai-expert-workflow-mcp
-```
-
 ## Usage with Cursor AI
 
 1. Add the MCP configuration to your editor:
@@ -190,7 +244,7 @@ npm install -g ai-expert-workflow-mcp
       "cwd": "${workspaceFolder}",
       "env": {
         "OPENROUTER_API_KEY": "${env:OPENROUTER_API_KEY}",
-        "OPENROUTER_MODEL": "openai/gpt-4-turbo",
+        "OPENROUTER_MODEL": "tngtech/deepseek-r1t-chimera:free",
         "MAX_TOKENS": 4000,
         "TEMPERATURE": 0.7,
         "MCP_TIMEOUT": "120000",
@@ -199,7 +253,7 @@ npm install -g ai-expert-workflow-mcp
     },
     "taskmaster-ai": {
       "command": "npx",
-      "args": ["-y", "task-master-mcp"],
+      "args": ["-y", "task-master-ai"],
       "env": {
         "OPENROUTER_API_KEY": "${env:OPENROUTER_API_KEY}",
         "OPENROUTER_MODEL": "openai/gpt-4-turbo",
@@ -263,21 +317,81 @@ The Software Architect helps you create a specification that includes:
 
 ## Task Master Integration
 
-The AI Expert Workflow seamlessly integrates with Task Master:
+The AI Expert Workflow seamlessly integrates with Task Master in two ways:
+
+> **Note:** You will need both API keys for the full workflow:
+> - **OpenRouter API key** for AI Expert Workflow (get one from [OpenRouter](https://openrouter.ai/keys))
+> - **Anthropic API key** for Task Master AI (get one from [Anthropic](https://console.anthropic.com/))
+> - **Perplexity API key** (optional) for Task Master AI enhanced research capabilities (get one from [Perplexity](https://docs.perplexity.ai/docs/getting-started))
+
+### Method 1: Automated PRD Generation (Recommended)
+
+Use the provided script to generate a PRD and prepare it for Task Master:
+
+```bash
+# Install the AI Expert Workflow MCP
+npm install -g ai-expert-workflow-mcp
+
+# Make sure to set your OpenRouter API key in your environment:
+# export OPENROUTER_API_KEY=your_openrouter_key_here
+
+# Run the automated script with your project details (default model)
+npx ai-expert-workflow-generate "Your detailed project description"
+
+# Or specify a different model for more creative or complex projects
+MODEL=openai/gpt-4o npx ai-expert-workflow-generate "Your detailed project description"
+```
+
+This script:
+1. Generates the PRD document based on your description
+2. Automatically saves it in Task Master compatible format (at `scripts/prd.txt`)
+3. Provides instructions for using Task Master to parse the PRD
+
+#### Using Task Master to Parse the PRD
+
+You can use Task Master in one of two ways:
+
+**Option 1: MCP Integration** (Recommended for Cursor users)
+1. Add the Task Master MCP to your editor configuration:
+   ```json
+   "mcpServers": {
+     "taskmaster-ai": {
+       "command": "npx",
+       "args": ["-y", "task-master-ai"],
+       "env": {
+         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
+         "MODEL": "claude-3-sonnet-20240229"
+       }
+     }
+   }
+   ```
+2. Then ask your AI assistant:
+   ```
+   Can you parse the PRD at scripts/prd.txt and generate tasks?
+   ```
+
+**Option 2: Command Line Usage**
+1. Install Task Master:
+   ```
+   npm install -g task-master-ai
+   ```
+2. Parse the PRD:
+   ```
+   task-master parse-prd scripts/prd.txt
+   ```
+
+### Method 2: Manual Integration
+
+For more control over the process:
 
 1. When generating a PRD, use the `saveForTaskMaster` parameter:
    ```
    generateDocument productManager "Your project details" true
    ```
 
-2. This saves your PRD in a format that Task Master can parse and creates Cursor workflow documentation
+2. This saves your PRD in a format that Task Master can parse (at `scripts/prd.txt`)
 
-3. You can then use Task Master to create tasks:
-   ```
-   Can you parse the PRD at scripts/prd.txt and generate tasks?
-   ```
-
-4. Task Master will break down your PRD into actionable development tasks that you can track and implement
+3. Then use one of the Task Master methods described above to parse the PRD and create tasks.
 
 ### Utility Scripts
 
@@ -292,7 +406,10 @@ These scripts are useful for testing and understanding how the integration works
 
 See the [Create-MCP.md](Create-MCP.md) file for a complete guide on creating your own AI Expert Workflow MCP server from scratch.
 
+For details on OpenRouter API integration, see [OPENROUTER.md](OPENROUTER.md).
+
+For Task Master AI documentation, see [Task Master on npm](https://www.npmjs.com/package/task-master-ai).
+
 ## License
 
 MIT
-

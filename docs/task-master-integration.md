@@ -1,6 +1,6 @@
-# Integrating with Claude Task Master
+# Integrating with Task Master AI
 
-This guide explains how to use AI Expert Workflow MCP alongside Claude Task Master.
+This guide explains how to use AI Expert Workflow MCP alongside Task Master AI.
 
 ## Configuration
 
@@ -24,14 +24,51 @@ To use both MCPs together, add both to your editor configuration:
       "args": ["-y", "task-master-mcp"],
       "env": {
         "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
+        "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
         "MODEL": "claude-3-sonnet-20240229",
-        "MAX_TOKENS": 8000,
-        "TEMPERATURE": 0.7
+        "PERPLEXITY_MODEL": "sonar-pro",
+        "MAX_TOKENS": 64000,
+        "TEMPERATURE": 0.2,
+        "DEFAULT_SUBTASKS": 5,
+        "DEFAULT_PRIORITY": "medium"
       }
     }
   }
 }
 ```
+
+### Model Options
+
+**For AI Expert Workflow (using OpenRouter API):**
+With OpenRouter API, you can choose from various AI models based on your needs:
+
+- **High-performance models** for complex planning:
+  - `openai/gpt-4o`
+  - `anthropic/claude-3-opus-20240229`
+  - `meta/llama-3-70b-instruct`
+
+- **Balanced models** for everyday work:
+  - `anthropic/claude-3-sonnet-20240229`
+  - `mistral/mistral-large`
+  - `google/gemini-pro`
+
+- **Fast models** for quick iterations:
+  - `openai/gpt-3.5-turbo`
+  - `anthropic/claude-3-haiku-20240307`
+  - `mistral/mistral-medium`
+
+For the full list of available models, see [OpenRouter Models](https://openrouter.ai/models).
+
+**For Task Master AI (using Anthropic API):**
+Task Master AI currently supports Anthropic Claude models:
+- `claude-3-opus-20240229`
+- `claude-3-sonnet-20240229` (recommended)
+- `claude-3-haiku-20240307`
+
+Task Master AI also supports Perplexity API models (optional, for enhanced research):
+- `sonar-small-online`
+- `sonar-medium-online`
+- `sonar-pro` (recommended)
 
 ## Workflow
 
