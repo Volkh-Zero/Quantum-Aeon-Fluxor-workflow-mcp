@@ -31,15 +31,23 @@ const response = await consultWithExpert('productManager', 'My project descripti
 The project includes comprehensive tests for the OpenRouter integration:
 
 ```bash
-# Run JavaScript tests
-npm test
+# Quick verification of OpenRouter API (recommended)
+npm run test:openrouter-direct
 
-# Run TypeScript tests
-npm run test:ts
+# Verify your API key without modifying the .env file
+npm run verify-openrouter YOUR_API_KEY
 
-# Or use the shell scripts
-./tests/run-js-test.sh
-./tests/run-ts-test.sh
+# Run essential tests (tests both MCP and OpenRouter)
+npm run test:essential
+
+# Run comprehensive tests
+npm run test:all
+
+# Run individual test components
+npm test                    # JavaScript tests
+npm run test:ts             # TypeScript tests
+./tests/run-js-test.sh      # JavaScript tests via shell script
+./tests/run-ts-test.sh      # TypeScript tests via shell script
 ```
 
 Test results will be saved to `tests/results/result_test.md` and `tests/results/result_test_ts.md`. These files contain detailed information about the API requests and responses, making it easy to debug and understand how the OpenRouter API works.

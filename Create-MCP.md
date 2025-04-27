@@ -2,6 +2,8 @@
 
 This guide explains how to clone, build, and publish the AI Expert Workflow MCP from the GitHub repository.
 
+> **Note**: AI Expert Workflow is designed to work completely standalone. It can generate comprehensive PRDs without requiring Task Master or any other dependencies.
+
 ## Prerequisites
 
 - Node.js (v16+)
@@ -54,6 +56,27 @@ Build the project:
 
 ```bash
 npm run build
+```
+
+Run the essential tests to verify your setup:
+
+```bash
+npm run test:essential
+```
+
+This will test both the MCP server and the OpenRouter API integration.
+
+You can also run individual tests:
+
+```bash
+# Test only the MCP server
+npm run test:mcp-only
+
+# Test only the OpenRouter API
+npm run test:openrouter-direct
+
+# Run comprehensive tests
+npm run test:all
 ```
 
 Test the MCP server locally:

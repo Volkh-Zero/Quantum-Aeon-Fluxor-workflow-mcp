@@ -2,21 +2,41 @@
 
 [![npm version](https://badge.fury.io/js/ai-expert-workflow-mcp.svg)](https://badge.fury.io/js/ai-expert-workflow-mcp)
 
-An MCP (Model Control Plane) server that implements the AI Expert Workflow for integration with Task Master, using OpenRouter API for AI capabilities. This project allows you to consult with AI experts in product management, UX design, and software architecture to plan and develop your projects.
+An MCP (Model Context Protocol) server that implements the AI Expert Workflow using OpenRouter API for AI capabilities. This project allows you to consult with AI experts in product management, UX design, and software architecture to plan and develop your projects. It can be used standalone or with Task Master for task management (optional).
 
 ## 🚀 Quick Start for End Users
 
-If you just want to use the AI Expert Workflow MCP with Task Master, follow these steps:
+### Standalone Usage (Recommended)
 
-### Setup
-
-1. Install both MCPs globally:
+1. Install AI Expert Workflow globally:
    ```bash
-   npm install -g ai-expert-workflow-mcp task-master-ai
+   npm install -g ai-expert-workflow-mcp
    ```
 
-2. Get the required API keys:
+2. Get an OpenRouter API key:
    - **OpenRouter API key** for AI Expert Workflow: [Get one here](https://openrouter.ai/keys)
+
+3. Generate a PRD for your project:
+   ```bash
+   # Set your API key
+   export OPENROUTER_API_KEY=your_key_here
+
+   # Generate a PRD
+   npx ai-expert-workflow-generate "Your detailed project description"
+   ```
+
+4. Review your PRD in `prd.md`
+
+### Optional: Task Master Integration
+
+If you also want to use Task Master for task management (optional):
+
+1. Install Task Master globally:
+   ```bash
+   npm install -g task-master-ai
+   ```
+
+2. Get the additional API keys:
    - **Anthropic API key** for Task Master AI: [Get one here](https://console.anthropic.com/)
    - **Perplexity API key** (optional) for Task Master AI enhanced research capability: [Get one here](https://docs.perplexity.ai/docs/getting-started)
 
@@ -62,28 +82,24 @@ If you just want to use the AI Expert Workflow MCP with Task Master, follow thes
 
 3. Enable the MCPs in your Cursor settings.
 
-### Complete Workflow Example
+### Complete Workflow Examples
 
-#### Option 1: Fully Automated Workflow (Recommended)
+#### Option 1: Standalone PRD Generation (Recommended)
 ```bash
-# Install the necessary packages globally
-npm install -g ai-expert-workflow-mcp task-master-ai
+# Install AI Expert Workflow globally
+npm install -g ai-expert-workflow-mcp
 
-# Make sure to set your API keys in your environment or .env file:
-# OPENROUTER_API_KEY=your_openrouter_key_here  (for AI Expert Workflow)
-# ANTHROPIC_API_KEY=your_anthropic_key_here    (for Task Master)
-# PERPLEXITY_API_KEY=your_perplexity_key_here  (optional, for Task Master AI research)
+# Set your OpenRouter API key
+export OPENROUTER_API_KEY=your_openrouter_key_here
 
-# Generate PRD and automatically parse it into tasks with one command
-# You can specify a different model with the MODEL environment variable
-MODEL=openai/gpt-4o npx ai-expert-workflow-generate "I want to build a recipe app that helps users find recipes based on ingredients they already have at home. Target users are home cooks who want to reduce food waste and save money."
+# Generate a PRD with one command
+npx ai-expert-workflow-generate "I want to build a recipe app that helps users find recipes based on ingredients they already have at home. Target users are home cooks who want to reduce food waste and save money."
 ```
 
 This single command will:
 1. Generate a comprehensive PRD document based on your description
-2. Save it in a format compatible with Task Master
-3. Automatically launch Task Master to parse the PRD and create tasks
-4. Display the tasks and next steps
+2. Save it as `prd.md` in your current directory
+3. Also save it in Task Master compatible format (at `scripts/prd.txt`) in case you want to use Task Master later
 
 #### Option 2: Interactive Conversation Workflow
 
@@ -100,16 +116,18 @@ AI: [Asks clarifying questions about target users, key features, monetization, e
 User: [Provides detailed responses about the app vision]
 ```
 
-#### Step 2: Generate the PRD with Task Master Integration
+#### Step 2: Generate the PRD
 ```
-User: Can you generate a complete PRD document based on our consultation and save it for Task Master?
+User: Can you generate a complete PRD document based on our consultation?
 
 AI: [Generates comprehensive PRD with MVP focus and lean startup validation plan]
 
-AI: Document saved to PRD.md and also saved for Task Master at scripts/prd.txt. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"
+AI: Document saved to PRD.md. You can now review it and use it for your development planning.
 ```
 
-#### Step 3: Create Tasks with Task Master
+#### Step 3 (Optional): Use Task Master to Create Tasks
+If you want to break down your PRD into development tasks, you can optionally use Task Master:
+
 ```
 User: Can you parse the PRD at scripts/prd.txt and generate tasks?
 
@@ -120,27 +138,21 @@ User: What's the next task I should work on?
 AI: [Task Master suggests the highest priority task with implementation details]
 ```
 
-#### Step 4: Implement Tasks
-```
-User: Help me implement the "Ingredient Search Feature" task.
-
-AI: [Task Master provides guidance and code for implementing the specific feature]
-```
-
-This streamlined workflow transforms your idea into a well-planned product and organized development tasks, all through natural conversation with specialized AI experts.
+This streamlined workflow transforms your idea into a well-planned product with a comprehensive PRD. You can then optionally use Task Master to break it down into development tasks.
 
 ## Features
 
-- Consult with AI experts in three key roles:
+- **Standalone PRD Generation**: Generate comprehensive PRDs without any dependencies
+- **Consult with AI experts** in three key roles:
   - AI Product Manager
   - AI UX Designer
   - AI Software Architect
-- Generate comprehensive documents:
+- **Generate comprehensive documents**:
   - Product Requirements Document (PRD) with MVP focus and lean startup approach
   - UX Design Document with prototype descriptions and user testing plans
   - Software Architecture Specification with functional specifications and technical design
-- Seamless integration with Task Master
-- Powered by OpenRouter API for maximum flexibility across AI models:
+- **Optional Task Master integration**: Can be used with Task Master if you want task management
+- **Powered by OpenRouter API** for maximum flexibility across AI models:
   - Works with OpenAI models (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
   - Works with Anthropic models (Claude 3 Opus, Sonnet, Haiku)
   - Works with other models (Google Gemini, Mistral, Llama, Cohere, etc.)
@@ -148,10 +160,11 @@ This streamlined workflow transforms your idea into a well-planned product and o
 ## Benefits of Using AI Expert Workflow MCP
 
 - **Complete Project Planning**: Get expert guidance through the entire product planning process
+- **Standalone Operation**: Works completely on its own without requiring Task Master
 - **Lean Startup Approach**: Focus on MVP definition and validation plans
 - **User-Centered Design**: Create user experiences based on solid UX principles
 - **Technical Excellence**: Design scalable architectures that meet your requirements
-- **Task Master Integration**: Convert your PRD directly into development tasks
+- **Optional Task Master Integration**: Convert your PRD into development tasks if needed
 - **Cursor Integration**: Seamless workflow within your development environment
 - **Model Flexibility**: Choose from dozens of AI models through OpenRouter API
   - Use high-performance models (Claude Opus, GPT-4o) for complex planning
@@ -199,6 +212,13 @@ This makes the `ai-expert-workflow-mcp` command globally available in your termi
 
 6. Run tests (optional):
    ```
+   # Run essential tests (recommended for quick verification)
+   npm run test:essential
+
+   # Run individual tests
+   npm run test:mcp-only        # Test only the MCP server
+   npm run test:openrouter-direct  # Test only the OpenRouter API
+
    # Run JavaScript tests
    npm test
 
@@ -315,27 +335,18 @@ The Software Architect helps you create a specification that includes:
 - Technical design
 - Integration requirements
 
-## Task Master Integration
+## Standalone PRD Generation
 
-The AI Expert Workflow seamlessly integrates with Task Master in two ways:
-
-> **Note:** You will need both API keys for the full workflow:
-> - **OpenRouter API key** for AI Expert Workflow (get one from [OpenRouter](https://openrouter.ai/keys))
-> - **Anthropic API key** for Task Master AI (get one from [Anthropic](https://console.anthropic.com/))
-> - **Perplexity API key** (optional) for Task Master AI enhanced research capabilities (get one from [Perplexity](https://docs.perplexity.ai/docs/getting-started))
-
-### Method 1: Automated PRD Generation (Recommended)
-
-Use the provided script to generate a PRD and prepare it for Task Master:
+The AI Expert Workflow is designed to work completely standalone:
 
 ```bash
 # Install the AI Expert Workflow MCP
 npm install -g ai-expert-workflow-mcp
 
-# Make sure to set your OpenRouter API key in your environment:
-# export OPENROUTER_API_KEY=your_openrouter_key_here
+# Set your OpenRouter API key
+export OPENROUTER_API_KEY=your_openrouter_key_here
 
-# Run the automated script with your project details (default model)
+# Generate a PRD with the default model
 npx ai-expert-workflow-generate "Your detailed project description"
 
 # Or specify a different model for more creative or complex projects
@@ -343,15 +354,24 @@ MODEL=openai/gpt-4o npx ai-expert-workflow-generate "Your detailed project descr
 ```
 
 This script:
-1. Generates the PRD document based on your description
-2. Automatically saves it in Task Master compatible format (at `scripts/prd.txt`)
-3. Provides instructions for using Task Master to parse the PRD
+1. Generates a comprehensive PRD document based on your description
+2. Saves it as `prd.md` in your current directory
+3. Also saves it in Task Master compatible format (at `scripts/prd.txt`) in case you want to use Task Master later
 
-#### Using Task Master to Parse the PRD
+## Optional: Task Master Integration
 
-You can use Task Master in one of two ways:
+> **Note:** Task Master integration is completely optional. You can use AI Expert Workflow on its own to generate PRDs.
+>
+> If you do want to use Task Master, you'll need these API keys:
+> - **OpenRouter API key** for AI Expert Workflow (get one from [OpenRouter](https://openrouter.ai/keys))
+> - **Anthropic API key** for Task Master AI (get one from [Anthropic](https://console.anthropic.com/))
+> - **Perplexity API key** (optional) for Task Master AI enhanced research capabilities (get one from [Perplexity](https://docs.perplexity.ai/docs/getting-started))
 
-**Option 1: MCP Integration** (Recommended for Cursor users)
+### Using Task Master to Parse the PRD
+
+If you want to convert your PRD into development tasks, you can use Task Master in one of two ways:
+
+**Option 1: MCP Integration** (For Cursor users)
 1. Add the Task Master MCP to your editor configuration:
    ```json
    "mcpServers": {
@@ -379,19 +399,6 @@ You can use Task Master in one of two ways:
    ```
    task-master parse-prd scripts/prd.txt
    ```
-
-### Method 2: Manual Integration
-
-For more control over the process:
-
-1. When generating a PRD, use the `saveForTaskMaster` parameter:
-   ```
-   generateDocument productManager "Your project details" true
-   ```
-
-2. This saves your PRD in a format that Task Master can parse (at `scripts/prd.txt`)
-
-3. Then use one of the Task Master methods described above to parse the PRD and create tasks.
 
 ### Utility Scripts
 

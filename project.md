@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The AI Expert Workflow MCP is a Model Context Protocol (MCP) server that provides AI expert consultation services through Claude models. It allows users to consult with different AI expert personas (Product Manager, UX Designer, Software Architect) to create structured documents for product planning and development.
+The AI Expert Workflow MCP is a Model Context Protocol (MCP) server that provides AI expert consultation services through OpenRouter API. It allows users to consult with different AI expert personas (Product Manager, UX Designer, Software Architect) to create structured documents for product planning and development.
 
 ## Code Structure
 
@@ -83,18 +83,18 @@ The MCP server is implemented using the Model Context Protocol SDK. It registers
 
 ### AI Integration
 
-The project uses the Anthropic API to interact with Claude models:
+The project uses the OpenRouter API to interact with various AI models:
 
-- Uses the `@anthropic-ai/sdk` package
+- Uses the `node-fetch` package for API requests
 - Configures the model, max tokens, and temperature
-- Handles different content block types in responses
+- Supports a wide range of AI models through OpenRouter
 
 ### Configuration
 
 The project uses environment variables for configuration:
 
-- `ANTHROPIC_API_KEY`: Required for making calls to Claude AI models
-- `MODEL`: The Claude model to use (default: claude-3-sonnet-20240229)
+- `OPENROUTER_API_KEY`: Required for making calls to AI models via OpenRouter
+- `OPENROUTER_MODEL`: The model to use (default: tngtech/deepseek-r1t-chimera:free)
 - `MAX_TOKENS`: Maximum tokens for responses
 - `TEMPERATURE`: Temperature setting for responses
 
@@ -128,8 +128,9 @@ The project uses environment variables for configuration:
    - More specific error types could be used
 
 3. **Testing**:
-   - No automated tests are included
-   - Adding unit and integration tests would improve reliability
+   - Comprehensive tests for both JavaScript and TypeScript
+   - Essential tests for quick verification
+   - Specialized tests for MCP server and OpenRouter API
 
 ## Deployment and Usage
 
@@ -153,9 +154,9 @@ The project can be deployed in several ways:
 
 ## Conclusion
 
-The AI Expert Workflow MCP is a well-structured project that provides valuable AI expert consultation services through the Model Context Protocol. It has a clean architecture, good separation of concerns, and integrates well with Claude models and Task Master.
+The AI Expert Workflow MCP is a well-structured project that provides valuable AI expert consultation services through the Model Context Protocol. It has a clean architecture, good separation of concerns, and integrates well with various AI models through OpenRouter and with Task Master.
 
-The project successfully implements the MCP server without requiring an MCP API key, using only the Anthropic API key for AI functionality. The codebase is clean and organized, with only the necessary files remaining after the cleanup.
+The project successfully implements the MCP server without requiring an MCP API key, using only the OpenRouter API key for AI functionality. The codebase is clean and organized, with only the necessary files remaining after the cleanup.
 
 The main strengths of the project are its modular design, type safety, and flexible configuration. Areas for improvement include more comprehensive documentation, enhanced error handling, and the addition of automated tests.
 

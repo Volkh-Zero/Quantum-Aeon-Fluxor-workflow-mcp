@@ -1,6 +1,8 @@
-# Integrating with Task Master AI
+# Optional Integration with Task Master AI
 
-This guide explains how to use AI Expert Workflow MCP alongside Task Master AI.
+This guide explains how to use AI Expert Workflow MCP alongside Task Master AI (optional).
+
+> **Note**: Task Master integration is completely optional. AI Expert Workflow can be used on its own to generate comprehensive PRDs without Task Master.
 
 ## Configuration
 
@@ -72,18 +74,28 @@ Task Master AI also supports Perplexity API models (optional, for enhanced resea
 
 ## Workflow
 
+### Step 1: Generate Your PRD with AI Expert Workflow (Required)
+
 1. Use AI Expert Workflow to create your PRD:
    ```
    Can you consult with the AI Product Manager to create a PRD for my project?
    Can you generate a complete PRD document based on our consultation?
    ```
 
-2. Use Task Master to parse the PRD and generate tasks:
+2. Review your PRD in `prd.md`
+
+At this point, you have a complete PRD that you can use for your development planning. You can stop here if you don't need task management.
+
+### Step 2: Use Task Master to Generate Tasks (Optional)
+
+If you want to break down your PRD into development tasks:
+
+1. Use Task Master to parse the PRD and generate tasks:
    ```
    Can you parse the PRD at prd.md and generate tasks?
    ```
 
-3. Use Task Master to work on the generated tasks:
+2. Use Task Master to work on the generated tasks:
    ```
    What's the next task I should work on?
    Can you help me implement task 3?
@@ -91,7 +103,9 @@ Task Master AI also supports Perplexity API models (optional, for enhanced resea
 
 ## Full Workflow Example
 
-### 1. Start with the Product Manager
+### Required: Generate Your PRD
+
+#### 1. Start with the Product Manager
 
 User: "Can you consult with the AI Product Manager to create a PRD for my project? I want to build a task management app for developers."
 
@@ -101,19 +115,25 @@ User: [Provides more details about the product]
 
 AI Expert Workflow: [Offers more specific guidance and recommendations]
 
-### 2. Generate the PRD Document
+#### 2. Generate the PRD Document
 
 User: "Can you generate a complete PRD document based on our consultation?"
 
 AI Expert Workflow: [Generates a comprehensive PRD and saves it to prd.md]
 
-### 3. Generate Tasks with Task Master
+**At this point, you have a complete PRD that you can use for your development planning.**
+
+### Optional: Use Task Master for Task Management
+
+If you want to break down your PRD into development tasks:
+
+#### 3. Generate Tasks with Task Master (Optional)
 
 User: "Can you parse the PRD at prd.md and generate tasks?"
 
 Task Master: [Analyzes the PRD and creates tasks]
 
-### 4. Work on Tasks with Task Master
+#### 4. Work on Tasks with Task Master (Optional)
 
 User: "What's the next task I should work on?"
 
@@ -123,10 +143,18 @@ User: "Can you help me implement task 3?"
 
 Task Master: [Provides guidance on implementing the specific task]
 
-## Tips for Efficient Integration
+## Tips for Efficient Workflow
+
+### For Standalone PRD Generation
 
 1. **Complete the consultation process** before generating documents
-2. **Review generated documents** before using them with Task Master
-3. **Be specific about file paths** when asking Task Master to parse documents
-4. **Use Task Master's task tracking** to manage your implementation progress
-5. **Iterate as needed** between experts as your project evolves
+2. **Review generated PRDs** carefully before using them for development planning
+3. **Save your PRDs** in a version control system for future reference
+4. **Iterate as needed** with the AI Product Manager to refine your PRD
+
+### For Optional Task Master Integration
+
+1. **Review generated documents** before using them with Task Master
+2. **Be specific about file paths** when asking Task Master to parse documents
+3. **Use Task Master's task tracking** to manage your implementation progress
+4. **Remember that Task Master is optional** - you can use AI Expert Workflow on its own

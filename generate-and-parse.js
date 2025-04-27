@@ -1,27 +1,31 @@
 #!/usr/bin/env node
 
 /**
- * Automated PRD Generation and Task Master Integration
- * 
- * This script automates the entire workflow:
- * 1. Generates a PRD using the AI Expert Workflow
- * 2. Saves it in Task Master compatible format
- * 
- * Usage: 
+ * Standalone PRD Generation with Optional Task Master Integration
+ *
+ * This script generates a comprehensive PRD using AI Expert Workflow:
+ * 1. Generates a PRD using the AI Product Manager
+ * 2. Saves it as a standalone document (prd.md)
+ * 3. Optionally saves it in Task Master compatible format (if you want to use Task Master later)
+ *
+ * Usage:
  *   - npm package: npx ai-expert-workflow-generate "Your detailed project description"
  *   - local: node generate-and-parse.js "Your detailed project description"
- * 
+ *
  * Requirements:
  *   - OpenRouter API key (set as OPENROUTER_API_KEY environment variable)
  *   - Node.js 14 or higher
- * 
+ *
  * Installation:
  *   - Global: npm install -g ai-expert-workflow-mcp
  *   - Local: npm install ai-expert-workflow-mcp
- * 
+ *
  * Environment Setup:
  *   - Create a .env file in your project root with OPENROUTER_API_KEY=your_key_here
  *   - Or set environment variable directly: export OPENROUTER_API_KEY=your_key_here
+ *
+ * Note: Task Master is completely optional. You can use this script to generate
+ * PRDs without ever installing or using Task Master.
  */
 
 const { spawn, execSync } = require('child_process');
@@ -97,10 +101,18 @@ function isTaskMasterInstalled() {
 
 // Function to provide Task Master integration instructions
 function provideTaskMasterInstructions(prdPath) {
-  console.log('\n📋 Task Master Integration Options:');
-  
-  // Option 1: MCP integration (recommended)
-  console.log('\n1️⃣ Option 1: MCP Integration (Recommended)');
+  console.log('\n📋 Next Steps:');
+
+  console.log('\n✅ Your PRD is ready! You can now:');
+  console.log('   1. Review your PRD at prd.md');
+  console.log('   2. Share it with your team');
+  console.log('   3. Use it for development planning');
+
+  console.log('\n📌 Optional: Task Master Integration');
+  console.log('   If you want to convert your PRD into development tasks, you can use Task Master:');
+
+  // Option 1: MCP integration
+  console.log('\n1️⃣ Option 1: MCP Integration');
   console.log('   Add the Task Master MCP to your editor configuration:');
   console.log('   ```json');
   console.log('   "mcpServers": {');
@@ -116,20 +128,22 @@ function provideTaskMasterInstructions(prdPath) {
   console.log('   ```');
   console.log('   Then, ask your AI assistant:');
   console.log(`   "Can you parse the PRD at ${prdPath} and generate tasks?"`);
-  
+
   // Option 2: CLI usage
   console.log('\n2️⃣ Option 2: Command Line Usage');
   console.log('   1. Install Task Master:');
   console.log('      npm install -g task-master-ai');
   console.log('   2. Parse the PRD:');
   console.log(`      task-master parse-prd ${prdPath}`);
+
+  console.log('\n⚠️ Note: Task Master is completely optional. You can use your PRD without it.');
 }
 
 async function main() {
   try {
-    console.log('🚀 Starting automated PRD generation and task parsing workflow');
+    console.log('🚀 Starting standalone PRD generation');
     console.log('\n📝 Step 1: Generating PRD document from your project description...');
-    
+
     // Get the product manager template
     let template;
     try {
@@ -140,12 +154,12 @@ async function main() {
       console.log('Continuing with default template...');
       template = `# Product Requirements Document\n\n## Product Overview\n[Overview goes here]\n\n## Problem Statement\n[Problem statement goes here]`;
     }
-    
+
     // Generate the PRD document
     let document;
     try {
       document = await generateExpertDocument(
-        'productManager', 
+        'productManager',
         template,
         projectDescription
       );
@@ -159,51 +173,63 @@ async function main() {
       console.log('\nTry again later or check your API key at: https://openrouter.ai/keys');
       process.exit(1);
     }
-    
-    // Save the document in Task Master format
+
+    // Save the document as a standalone PRD
     try {
-      console.log('\n💾 Step 2: Saving document in Task Master compatible format...');
-      const tmPath = await saveForTaskMaster(document);
-      console.log(`✅ Saved at ${tmPath}`);
+      console.log('\n💾 Step 2: Saving standalone PRD document...');
+      const prdFilePath = path.join(process.cwd(), 'prd.md');
+      fs.writeFileSync(prdFilePath, document, 'utf8');
+      console.log(`✅ PRD saved at ${prdFilePath}`);
     } catch (error) {
-      console.error('❌ Error saving document for Task Master:', error.message);
+      console.error('❌ Error saving PRD document:', error.message);
       console.log('Please check file permissions in your project directory.');
       process.exit(1);
     }
-    
+
+    // Optionally save in Task Master format
+    try {
+      console.log('\n💾 Step 3: Also saving in Task Master compatible format (optional)...');
+      const tmPath = await saveForTaskMaster(document);
+      console.log(`✅ Also saved at ${tmPath} (for Task Master integration if needed later)`);
+    } catch (error) {
+      console.error('❌ Error saving document for Task Master:', error.message);
+      console.log('This is optional - your PRD is still available at prd.md');
+    }
+
     // Check if task-master-ai is installed
-    console.log('\n🔍 Step 3: Checking for Task Master installation...');
+    console.log('\n🔍 Step 4: Checking for Task Master installation (optional)...');
     const taskMasterInstalled = isTaskMasterInstalled();
-    
+
     try {
       // Save the document to a predictable location for Task Master
       const scriptDir = path.join(process.cwd(), 'scripts');
       const prdPath = path.join(scriptDir, 'prd.txt');
-      
+
       // Ensure scripts directory exists
       if (!fs.existsSync(scriptDir)) {
         fs.mkdirSync(scriptDir, { recursive: true });
       }
-      
+
       // Save the PRD
       fs.writeFileSync(prdPath, document, 'utf8');
       console.log('✅ PRD saved for Task Master parsing');
-      
+
       if (taskMasterInstalled) {
-        console.log('\n⚠️ Task Master AI found globally installed, but recommended usage is via MCP integration.');
+        console.log('\n📌 Task Master AI is installed on your system (optional).');
         provideTaskMasterInstructions(prdPath);
       } else {
-        console.log('\n⚠️ Task Master AI not found globally installed.');
+        console.log('\n📌 Task Master AI is not installed (this is completely fine).');
         provideTaskMasterInstructions(prdPath);
       }
     } catch (error) {
-      console.error('❌ Error during Task Master integration:', error.message);
-      console.log('Please check file permissions in your project directory.');
+      console.error('❌ Error checking for Task Master:', error.message);
+      console.log('This is optional - your PRD is still available at prd.md');
+      provideTaskMasterInstructions('scripts/prd.txt');
     }
-    
-    console.log('\n✅ Workflow complete!');
+
+    console.log('\n✅ PRD generation complete!');
     console.log('\n📚 Documentation: https://github.com/bacoco/ai-expert-workflow-mcp#readme');
-    
+
   } catch (error) {
     console.error('❌ Unexpected error:', error.message);
     console.log('\nPlease report this issue at: https://github.com/bacoco/ai-expert-workflow-mcp/issues');
@@ -211,4 +237,4 @@ async function main() {
   }
 }
 
-main(); 
+main();
