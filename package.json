@@ -1,11 +1,12 @@
 {
   "name": "ai-expert-workflow-mcp",
-  "version": "2.1.6",
-  "description": "AI Expert Workflow MCP Server for Task Master integration with OpenRouter API support",
+  "version": "2.2.0",
+  "description": "AI Expert Workflow MCP Server for standalone PRD generation with optional Task Master integration",
   "main": "dist/index.js",
   "bin": {
     "ai-expert-workflow-mcp": "dist/index.js",
-    "ai-expert-workflow-generate": "generate-and-parse.js"
+    "ai-expert-workflow-generate": "generate-and-parse.js",
+    "ai-expert-workflow-prd": "generate-prd.js"
   },
   "scripts": {
     "build": "tsc",
@@ -32,14 +33,17 @@
     "ai",
     "workflow",
     "mcp",
+    "prd",
+    "product-requirements",
+    "openrouter",
     "task-master",
-    "openrouter"
+    "standalone"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bacoco/ai-expert-workflow-mcp.git"
   },
-  "author": "",
+  "author": "bacoco",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bacoco/ai-expert-workflow-mcp/issues"
