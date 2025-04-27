@@ -15,6 +15,7 @@
     "test": "node tests/test-openrouter.js",
     "test:ts": "ts-node tests/test-openrouter.ts",
     "test:all": "bash tests/run-comprehensive-test.sh",
+    "test:essential": "bash tests/run-essential-tests.sh",
     "test:js": "bash tests/run-js-test.sh",
     "test:mcp": "node dist/index.js",
     "verify-openrouter": "node tests/verify-openrouter.js",
@@ -22,6 +23,8 @@
     "verify-and-update": "bash tests/verify-and-update.sh",
     "verify-env": "node tests/verify-env-model.js",
     "test:real-mcp": "node tests/test-real-mcp.js",
+    "test:mcp-only": "node tests/test-mcp-only.js",
+    "test:openrouter-direct": "node tests/test-openrouter-direct.js",
     "check-sdk": "node tests/check-mcp-sdk.js",
     "generate": "node generate-and-parse.js"
   },

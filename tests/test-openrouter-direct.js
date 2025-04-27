@@ -1,21 +1,26 @@
-// Verification script for OpenRouter API using command-line argument for API key
+// Direct test script for OpenRouter API using the API key from .env
 const fetch = require('node-fetch');
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-// Get API key from command line argument
-const apiKey = process.argv[2];
+// Get API key directly from .env file
+const envPath = path.join(__dirname, '..', '.env');
+const envContent = fs.readFileSync(envPath, 'utf8');
+const apiKeyMatch = envContent.match(/OPENROUTER_API_KEY=(.+)/);
+const apiKey = apiKeyMatch ? apiKeyMatch[1].trim() : '';
 
 if (!apiKey) {
-  console.error('Error: API key is required as a command-line argument');
-  console.error('Usage: node verify-openrouter.js YOUR_API_KEY');
+  console.error('Error: OPENROUTER_API_KEY is required but not found in .env file');
   process.exit(1);
 }
 
+// Log the API key (first few characters) for debugging
+console.log(`Using API key: ${apiKey.substring(0, 10)}...`);
+
 // Test function to call OpenRouter API
-async function verifyOpenRouterAPI() {
-  console.log('Verifying OpenRouter API connection...');
+async function testOpenRouterAPI() {
+  console.log('Testing OpenRouter API...');
 
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -24,10 +29,10 @@ async function verifyOpenRouterAPI() {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://github.com/bacoco/ai-expert-workflow-mcp',
-        'X-Title': 'AI Expert Workflow MCP Verification'
+        'X-Title': 'AI Expert Workflow MCP Test'
       },
       body: JSON.stringify({
-        model: 'tngtech/deepseek-r1t-chimera:free', // Using the specified model
+        model: 'tngtech/deepseek-r1t-chimera:free',
         max_tokens: 100,
         temperature: 0.7,
         messages: [
@@ -44,7 +49,7 @@ async function verifyOpenRouterAPI() {
 
     const data = await response.json();
 
-    console.log('\n=== OpenRouter API Verification Results ===');
+    console.log('\n=== OpenRouter API Test Results ===');
     console.log('Status: SUCCESS');
     console.log('Response:');
     console.log(data.choices[0].message.content);
@@ -53,20 +58,20 @@ async function verifyOpenRouterAPI() {
 
     return true;
   } catch (error) {
-    console.error('\n=== OpenRouter API Verification Results ===');
+    console.error('\n=== OpenRouter API Test Results ===');
     console.error('Status: FAILED');
     console.error('Error:', error.message);
     return false;
   }
 }
 
-// Run the verification
-verifyOpenRouterAPI().then(success => {
+// Run the test
+testOpenRouterAPI().then(success => {
   if (success) {
-    console.log('\nVerification successful! Your OpenRouter API key is working correctly.');
-    console.log('You can now use this key in your MCP configuration.');
+    console.log('\nTest successful! Your OpenRouter API key is working correctly.');
+    process.exit(0);
   } else {
-    console.error('\nVerification failed! Please check your API key and try again.');
+    console.error('\nTest failed! Please check your API key and try again.');
     process.exit(1);
   }
 });
