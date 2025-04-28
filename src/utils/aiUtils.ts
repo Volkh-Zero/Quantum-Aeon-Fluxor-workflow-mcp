@@ -13,12 +13,8 @@ if (!apiKey) {
   process.exit(1);
 }
 
-export async function consultWithExpert(role: string, userInput: string): Promise<string> {
-  const expert = experts[role];
-  if (!expert) {
-    throw new Error(`Unknown expert role: ${role}`);
-  }
-
+// Generic function to call AI with any prompt and context
+export async function callAI(systemPrompt: string, context: string, userInput: string): Promise<string> {
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -33,7 +29,8 @@ export async function consultWithExpert(role: string, userInput: string): Promis
         max_tokens: parseInt(process.env.MAX_TOKENS || '4000', 10),
         temperature: parseFloat(process.env.TEMPERATURE || '0.7'),
         messages: [
-          { role: 'system', content: expert.systemPrompt },
+          { role: 'system', content: systemPrompt },
+          ...(context ? [{ role: 'user', content: context }] : []),
           { role: 'user', content: userInput }
         ]
       })
@@ -45,7 +42,7 @@ export async function consultWithExpert(role: string, userInput: string): Promis
     }
 
     const data = await response.json();
-    
+
     // Get the response text
     const responseText = data.choices[0].message.content || '';
     return responseText;
@@ -53,6 +50,15 @@ export async function consultWithExpert(role: string, userInput: string): Promis
     console.error('Error calling OpenRouter API:', error);
     throw error;
   }
+}
+
+export async function consultWithExpert(role: string, userInput: string): Promise<string> {
+  const expert = experts[role];
+  if (!expert) {
+    throw new Error(`Unknown expert role: ${role}`);
+  }
+
+  return callAI(expert.systemPrompt, '', userInput);
 }
 
 export async function generateExpertDocument(role: string, template: string, userInput: string): Promise<string> {
@@ -63,39 +69,19 @@ export async function generateExpertDocument(role: string, template: string, use
 
   const enhancedPrompt = `${expert.systemPrompt}\n\nPlease use the following template structure for your response:\n\n${template}\n\nBased on the user's input, create a complete, well-structured document. Format your response using Markdown with clear sections and subsections.`;
 
+  // Use higher max tokens and lower temperature for document generation
+  const originalMaxTokens = process.env.MAX_TOKENS;
+  const originalTemperature = process.env.TEMPERATURE;
+
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://github.com/yourusername/ai-expert-workflow-mcp',
-        'X-Title': 'AI Expert Workflow MCP'
-      },
-      body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || 'openai/gpt-3.5-turbo',
-        max_tokens: parseInt(process.env.MAX_TOKENS || '8000', 10),
-        temperature: parseFloat(process.env.TEMPERATURE || '0.5'),
-        messages: [
-          { role: 'system', content: enhancedPrompt },
-          { role: 'user', content: userInput }
-        ]
-      })
-    });
+    process.env.MAX_TOKENS = '8000';
+    process.env.TEMPERATURE = '0.5';
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`OpenRouter API error: ${response.status} ${JSON.stringify(errorData)}`);
-    }
-
-    const data = await response.json();
-    
-    // Get the response text
-    const responseText = data.choices[0].message.content || '';
-    return responseText;
-  } catch (error) {
-    console.error('Error calling OpenRouter API:', error);
-    throw error;
+    return await callAI(enhancedPrompt, '', userInput);
+  } finally {
+    // Restore original values
+    process.env.MAX_TOKENS = originalMaxTokens;
+    process.env.TEMPERATURE = originalTemperature;
   }
 }
 
