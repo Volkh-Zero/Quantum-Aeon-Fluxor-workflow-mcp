@@ -7,23 +7,35 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 // Get OpenRouter API key
-const apiKey = process.env.OPENROUTER_API_KEY || '';
-if (!apiKey) {
-  console.error('Error: OPENROUTER_API_KEY is required but not set in environment variables');
-  process.exit(1);
+function getApiKey(): string {
+  // Force reload of .env file
+  dotenv.config({ path: '.env' });
+
+  const apiKey = process.env.OPENROUTER_API_KEY || '';
+  console.log('API Key:', apiKey);
+
+  if (!apiKey) {
+    console.error('Error: OPENROUTER_API_KEY is required but not set in environment variables');
+    process.exit(1);
+  }
+  return apiKey;
 }
 
 // Generic function to call AI with any prompt and context
 export async function callAI(systemPrompt: string, context: string, userInput: string): Promise<string> {
   try {
+    const apiKey = getApiKey();
+
+    const headers = {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://github.com/bacoco/ai-expert-workflow-mcp',
+      'X-Title': 'AI Expert Workflow MCP'
+    };
+
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://github.com/yourusername/ai-expert-workflow-mcp',
-        'X-Title': 'AI Expert Workflow MCP'
-      },
+      headers,
       body: JSON.stringify({
         model: process.env.OPENROUTER_MODEL || 'openai/gpt-3.5-turbo',
         max_tokens: parseInt(process.env.MAX_TOKENS || '4000', 10),

@@ -12,11 +12,11 @@
 ## API Response Details
 ```json
 {
-  "id": "gen-1745773802-MI6KG5nTXKmYzrZ5YAvv",
+  "id": "gen-1745846970-AxLMXjpSgB1BFjRxnz9C",
   "provider": "Chutes",
   "model": "tngtech/deepseek-r1t-chimera:free",
   "object": "chat.completion",
-  "created": 1745773802,
+  "created": 1745846970,
   "choices": [
     {
       "logprobs": null,
@@ -27,14 +27,14 @@
         "role": "assistant",
         "content": "",
         "refusal": null,
-        "reasoning": "OpenRouter API is working correctly with the deepseek-r1t-chimera model!\\n\\nHow can I assist you today? 😊"
+        "reasoning": "OpenRouter API is working correctly with the deepseek-r1t-chimera model!\\n"
       }
     }
   ],
   "usage": {
     "prompt_tokens": 39,
-    "completion_tokens": 30,
-    "total_tokens": 69
+    "completion_tokens": 20,
+    "total_tokens": 59
   }
 }
 ```

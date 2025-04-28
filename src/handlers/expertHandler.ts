@@ -8,7 +8,7 @@ import {
 } from '../experts';
 import { WorkflowState } from '../state';
 import { ExpertInteractionResult, TopicProgress } from '../interfaces/expertInterfaces';
-import { callAI } from '../utils/aiUtils';
+import { consultWithExpert } from '../utils/aiUtils';
 
 /**
  * Handle expert interaction based on the current workflow state
@@ -56,7 +56,9 @@ export async function handleExpertInteraction(
   const contextData = getContextForStage(state);
 
   // Call the AI with appropriate prompt and context
-  const aiResponse = await callAI(expertPrompt, contextData, message);
+  // Add context to the message if available
+  const messageWithContext = contextData ? `${contextData}\n\n${message}` : message;
+  const aiResponse = await consultWithExpert(expertName, messageWithContext);
 
   // Update the state with progress
   const updatedStageData = updateStageProgress(currentStage, stageData, message, aiResponse);
