@@ -335,6 +335,35 @@ Can you parse the PRD at scripts/prd.txt and generate tasks?
 
 The workflow has been enhanced with a structured conversation flow that guides users through a comprehensive product development process. It consists of three main phases, each with specific topics that must be covered:
 
+### Conversation Flow and Document Generation
+
+The system is designed to engage in conversation with the user until either:
+
+1. **User Explicitly Requests Document Generation**
+   - The system checks for phrases like "generate document", "create PRD", etc.
+   - If the user requests document generation, the system checks if all required topics have been covered
+   - If topics are missing, it informs the user and continues the conversation
+   - Only when all topics are covered will it generate the document
+
+2. **AI Determines Enough Information Has Been Gathered**
+   - Each expert prompt explicitly instructs to "Don't move to the next topic until the current one is sufficiently defined"
+   - The system tracks topic completion throughout the conversation
+   - When all topics for a stage are completed, the AI will suggest generating a document
+   - The AI will ask for explicit confirmation before generating any document
+
+3. **Verification Before Moving On**
+   - All three expert prompts include instructions to verify with the user before concluding
+   - The Product Manager prompt: "Before concluding, verify with the user if all requirements are accurately captured. When the user is satisfied, ask if they would like to generate the final PRD document..."
+   - The UX Designer prompt: "Before concluding, verify all UX decisions with the user and ensure alignment with the product vision. When the user is satisfied, ask if they would like to generate the final UX Design Document..."
+   - The Software Architect prompt: "Before concluding, verify the technical approach with the user and ensure it meets all requirements from previous stages. When the user is satisfied, ask if they would like to generate the final Software Specification document."
+
+4. **Document Storage**
+   - Each expert's document is saved in both the root directory (e.g., `PRD.md`) and the scripts directory (e.g., `scripts/prd.txt`)
+   - The Product Manager's document is saved as `scripts/prd.txt` for Task Master compatibility
+   - The UX Designer's document is saved as `scripts/ux_design.txt`
+   - The Software Architect's document is saved as `scripts/software_spec.txt`
+   - When all stages are complete, a comprehensive document combining all three experts' outputs is generated and saved as `comprehensive_specification.md` and `scripts/comprehensive_specification.txt`
+
 ### 1. Product Definition (AI Product Manager)
 
 The Product Manager guides you through defining your product vision and requirements.
