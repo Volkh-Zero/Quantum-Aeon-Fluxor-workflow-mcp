@@ -4,6 +4,39 @@
 
 An MCP (Model Context Protocol) server that implements the AI Expert Workflow using OpenRouter API for AI capabilities. This project allows you to consult with AI experts in product management, UX design, and software architecture to plan and develop your projects. It can be used standalone or with Task Master for task management (optional).
 
+## How AI Expert Workflow Interacts With You
+
+The AI Expert Workflow is designed to provide a natural, conversational experience that guides you through the product development process:
+
+### Conversation Flow
+
+The system engages in conversation with you until you're ready to generate a document:
+
+1. **You Control Document Generation**
+   - The AI will chat with you until you explicitly request document generation with phrases like "generate document" or "create PRD"
+   - If you request a document before all important topics are covered, the AI will let you know what's missing and continue the conversation
+   - Only when all necessary topics are covered will the AI generate the document
+
+2. **Comprehensive Topic Coverage**
+   - The AI guides you through all important aspects of your product
+   - Each expert focuses on specific topics (product vision, user personas, technical architecture, etc.)
+   - The AI doesn't move to the next topic until the current one is thoroughly explored
+
+3. **Verification Before Completion**
+   - Before concluding each stage, the AI verifies that all your requirements are accurately captured
+   - The AI asks for your confirmation before generating any document
+   - You have full control over when to move forward
+
+### Document Storage
+
+When you're ready to generate documents:
+
+- Each expert's document is saved in both the main directory and the scripts directory
+- The Product Manager's document (PRD) is saved as `scripts/prd.txt` for Task Master compatibility
+- The UX Designer's document is saved as `scripts/ux_design.txt`
+- The Software Architect's document is saved as `scripts/software_spec.txt`
+- A comprehensive document combining all three experts' outputs is also generated
+
 ## 🚀 Quick Start for End Users
 
 ### Standalone Usage (Recommended)
@@ -340,22 +373,22 @@ The workflow has been enhanced with a structured conversation flow that guides u
 The system is designed to engage in conversation with the user until either:
 
 1. **User Explicitly Requests Document Generation**
-   - The system checks for phrases like "generate document", "create PRD", etc.
-   - If the user requests document generation, the system checks if all required topics have been covered
-   - If topics are missing, it informs the user and continues the conversation
+   - The `shouldGenerateDocument` function (lines 101-118) checks for phrases like "generate document", "create PRD", etc.
+   - If the user requests document generation, the system checks if all required topics have been covered (line 43)
+   - If topics are missing, it informs the user and continues the conversation (lines 46-49)
    - Only when all topics are covered will it generate the document
 
 2. **AI Determines Enough Information Has Been Gathered**
-   - Each expert prompt explicitly instructs to "Don't move to the next topic until the current one is sufficiently defined"
-   - The system tracks topic completion throughout the conversation
-   - When all topics for a stage are completed, the AI will suggest generating a document
-   - The AI will ask for explicit confirmation before generating any document
+   - Each expert prompt explicitly instructs to "Don't move to the next topic until the current one is sufficiently defined" (line 15)
+   - The system tracks topic completion (lines 247-281)
+   - The expert prompts include instructions to "verify with the user if all requirements are accurately captured" before concluding (line 32)
+   - The prompts also instruct to ask the user "if they would like to generate the final PRD document" (line 32)
 
 3. **Verification Before Moving On**
    - All three expert prompts include instructions to verify with the user before concluding
-   - The Product Manager prompt: "Before concluding, verify with the user if all requirements are accurately captured. When the user is satisfied, ask if they would like to generate the final PRD document..."
-   - The UX Designer prompt: "Before concluding, verify all UX decisions with the user and ensure alignment with the product vision. When the user is satisfied, ask if they would like to generate the final UX Design Document..."
-   - The Software Architect prompt: "Before concluding, verify the technical approach with the user and ensure it meets all requirements from previous stages. When the user is satisfied, ask if they would like to generate the final Software Specification document."
+   - The Product Manager prompt: "Before concluding, verify with the user if all requirements are accurately captured. When the user is satisfied, ask if they would like to generate the final PRD document..." (line 32)
+   - The UX Designer prompt: "Before concluding, verify all UX decisions with the user and ensure alignment with the product vision. When the user is satisfied, ask if they would like to generate the final UX Design Document..." (line 30)
+   - The Software Architect prompt: "Before concluding, verify the technical approach with the user and ensure it meets all requirements from previous stages. When the user is satisfied, ask if they would like to generate the final Software Specification document." (line 34)
 
 4. **Document Storage**
    - Each expert's document is saved in both the root directory (e.g., `PRD.md`) and the scripts directory (e.g., `scripts/prd.txt`)
