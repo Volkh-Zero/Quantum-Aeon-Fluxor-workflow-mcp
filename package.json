@@ -1,7 +1,7 @@
 {
   "name": "ai-expert-workflow-mcp",
-  "version": "2.2.0",
-  "description": "AI Expert Workflow MCP Server for standalone PRD generation with optional Task Master integration",
+  "version": "2.3.0",
+  "description": "Enhanced AI Expert Workflow MCP Server with structured conversation flow, topic tracking, and optional Task Master integration",
   "main": "dist/index.js",
   "bin": {
     "ai-expert-workflow-mcp": "dist/index.js",
@@ -37,7 +37,10 @@
     "product-requirements",
     "openrouter",
     "task-master",
-    "standalone"
+    "standalone",
+    "structured-workflow",
+    "topic-tracking",
+    "expert-system"
   ],
   "repository": {
     "type": "git",
