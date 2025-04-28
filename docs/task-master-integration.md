@@ -72,17 +72,40 @@ Task Master AI also supports Perplexity API models (optional, for enhanced resea
 - `sonar-medium-online`
 - `sonar-pro` (recommended)
 
-## Workflow
+## Enhanced Workflow
+
+AI Expert Workflow now features a structured conversation flow with topic tracking and stage transitions. This ensures comprehensive coverage of all important aspects of your product.
 
 ### Step 1: Generate Your PRD with AI Expert Workflow (Required)
 
-1. Use AI Expert Workflow to create your PRD:
+1. Start the AI Expert Workflow:
    ```
-   Can you consult with the AI Product Manager to create a PRD for my project?
+   Can you start the AI Expert Workflow for my project?
+   ```
+
+2. The workflow will guide you through three stages:
+   - **Product Definition** with the AI Product Manager
+   - **UX Design** with the AI UX Designer
+   - **Technical Architecture** with the AI Software Architect
+
+3. Each stage has specific topics that must be covered:
+   - For Product Manager: product vision, user personas, business requirements, etc.
+   - For UX Designer: UI documentation, feature specifications, user journeys, etc.
+   - For Software Architect: technical architecture, API specifications, implementation tasks, etc.
+
+4. The system tracks your progress and ensures all topics are covered before moving to the next stage.
+
+5. When you're ready to move to the next stage:
+   ```
+   Let's move to the next stage
+   ```
+
+6. Generate documents at any point:
+   ```
    Can you generate a complete PRD document based on our consultation?
    ```
 
-2. Review your PRD in `prd.md`
+7. Review your PRD in `prd.md`
 
 At this point, you have a complete PRD that you can use for your development planning. You can stop here if you don't need task management.
 
@@ -101,39 +124,69 @@ If you want to break down your PRD into development tasks:
    Can you help me implement task 3?
    ```
 
+For more details on the enhanced workflow, see [Enhanced Workflow Documentation](enhanced-workflow.md).
+
 ## Full Workflow Example
 
-### Required: Generate Your PRD
+### Enhanced AI Expert Workflow
 
-#### 1. Start with the Product Manager
+#### 1. Start the Complete Workflow
 
-User: "Can you consult with the AI Product Manager to create a PRD for my project? I want to build a task management app for developers."
+User: "Can you start the AI Expert Workflow for my task management app for developers?"
 
-AI Expert Workflow: [Provides detailed questions and guidance about the product]
+AI Expert Workflow: [Introduces the three-stage process and begins with the Product Manager]
 
-User: [Provides more details about the product]
+#### 2. Product Definition Stage
 
-AI Expert Workflow: [Offers more specific guidance and recommendations]
+AI Product Manager: "Let's start by discussing your product vision. What problem is your task management app trying to solve?"
 
-#### 2. Generate the PRD Document
+User: "Developers often struggle to track tasks across multiple projects and repositories."
 
-User: "Can you generate a complete PRD document based on our consultation?"
+AI Product Manager: "Great, now let's talk about your target users. Who specifically will be using this app?"
 
-AI Expert Workflow: [Generates a comprehensive PRD and saves it to prd.md]
+User: [Provides details about target users]
 
-**At this point, you have a complete PRD that you can use for your development planning.**
+AI Product Manager: "Now that we've covered product vision and user personas, let's discuss business requirements..."
+
+[Conversation continues through all required topics]
+
+User: "I think we've covered everything for the product definition. Let's move to the next stage."
+
+AI Expert Workflow: [Checks if all topics are covered, then transitions to UX Design stage]
+
+#### 3. UX Design Stage
+
+AI UX Designer: "Based on the product definition, let's design the user experience. First, let's discuss UI documentation and design preferences..."
+
+[Conversation continues through all UX topics]
+
+User: "Let's move to the technical planning stage."
+
+AI Expert Workflow: [Transitions to Software Architecture stage]
+
+#### 4. Technical Planning Stage
+
+AI Software Architect: "Now let's plan the technical implementation. What technology stack are you considering for this app?"
+
+[Conversation continues through all technical topics]
+
+User: "I think we've covered everything. Can you generate the comprehensive document?"
+
+AI Expert Workflow: [Generates a comprehensive document combining all three stages and saves it]
+
+**At this point, you have a complete project specification that you can use for development planning.**
 
 ### Optional: Use Task Master for Task Management
 
 If you want to break down your PRD into development tasks:
 
-#### 3. Generate Tasks with Task Master (Optional)
+#### 5. Generate Tasks with Task Master (Optional)
 
-User: "Can you parse the PRD at prd.md and generate tasks?"
+User: "Can you parse the PRD at scripts/prd.txt and generate tasks?"
 
 Task Master: [Analyzes the PRD and creates tasks]
 
-#### 4. Work on Tasks with Task Master (Optional)
+#### 6. Work on Tasks with Task Master (Optional)
 
 User: "What's the next task I should work on?"
 
@@ -144,6 +197,14 @@ User: "Can you help me implement task 3?"
 Task Master: [Provides guidance on implementing the specific task]
 
 ## Tips for Efficient Workflow
+
+### For Enhanced AI Expert Workflow
+
+1. **Follow the guided process** to ensure comprehensive coverage of all topics
+2. **Provide detailed responses** to the expert's questions for better results
+3. **Use the topic tracking feature** to ensure nothing important is missed
+4. **Move between stages** only when you've covered all required topics
+5. **Review progress** by asking what topics have been covered and what remains
 
 ### For Standalone PRD Generation
 

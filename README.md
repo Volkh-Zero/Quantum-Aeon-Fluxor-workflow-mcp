@@ -142,15 +142,19 @@ This streamlined workflow transforms your idea into a well-planned product with 
 
 ## Features
 
+- **Enhanced Workflow Structure**: Structured conversation flow with topic tracking and stage transitions
 - **Standalone PRD Generation**: Generate comprehensive PRDs without any dependencies
 - **Consult with AI experts** in three key roles:
   - AI Product Manager
   - AI UX Designer
   - AI Software Architect
+- **Topic-Based Conversations**: Ensures comprehensive coverage of all important aspects
+- **Progress Tracking**: Automatically tracks completed topics and guides you through the process
 - **Generate comprehensive documents**:
   - Product Requirements Document (PRD) with MVP focus and lean startup approach
   - UX Design Document with prototype descriptions and user testing plans
   - Software Architecture Specification with functional specifications and technical design
+  - Comprehensive Project Specification combining all three documents
 - **Optional Task Master integration**: Can be used with Task Master if you want task management
 - **Powered by OpenRouter API** for maximum flexibility across AI models:
   - Works with OpenAI models (GPT-4o, GPT-4-turbo, GPT-3.5-turbo)
@@ -159,11 +163,15 @@ This streamlined workflow transforms your idea into a well-planned product with 
 
 ## Benefits of Using AI Expert Workflow MCP
 
-- **Complete Project Planning**: Get expert guidance through the entire product planning process
+- **Structured Approach**: Guided workflow ensures comprehensive coverage of all important aspects
+- **Complete Project Planning**: Expert guidance through the entire product development process
+- **Topic Tracking**: Automatic tracking of completed topics prevents gaps in your planning
+- **Seamless Transitions**: Smooth transitions between experts with context preservation
 - **Standalone Operation**: Works completely on its own without requiring Task Master
 - **Lean Startup Approach**: Focus on MVP definition and validation plans
 - **User-Centered Design**: Create user experiences based on solid UX principles
 - **Technical Excellence**: Design scalable architectures that meet your requirements
+- **Comprehensive Documentation**: Generate complete project specifications that combine all phases
 - **Optional Task Master Integration**: Convert your PRD into development tasks if needed
 - **Cursor Integration**: Seamless workflow within your development environment
 - **Model Flexibility**: Choose from dozens of AI models through OpenRouter API
@@ -291,49 +299,82 @@ This makes the `ai-expert-workflow-mcp` command globally available in your termi
 
 3. Use natural language to interact with the AI Expert Workflow:
 
+**Start the complete workflow:**
 ```
 Can you start the AI Expert Workflow for my project?
+```
+
+**Work with specific experts:**
+```
 Can you consult with the AI Product Manager to create a PRD for my project?
+```
+
+**Move between stages:**
+```
+Let's move to the next stage
+```
+
+**Generate documents:**
+```
 Can you generate a complete PRD document based on our consultation?
 ```
 
-4. After generating your PRD, use Task Master to create tasks:
+**Check progress:**
+```
+What topics have we covered so far?
+What topics do we still need to discuss?
+```
+
+4. After generating your PRD, optionally use Task Master to create tasks:
 
 ```
 Can you parse the PRD at scripts/prd.txt and generate tasks?
 ```
 
-## AI Expert Workflow
+## Enhanced AI Expert Workflow
 
-The workflow consists of three main phases:
+The workflow has been enhanced with a structured conversation flow that guides users through a comprehensive product development process. It consists of three main phases, each with specific topics that must be covered:
 
 ### 1. Product Definition (AI Product Manager)
 
-The Product Manager helps you create a PRD that includes:
-- Product overview and problem statement
-- User personas and user stories
-- Feature requirements with priorities
-- MVP scope definition
-- Business model
-- Lean startup validation plan
+The Product Manager guides you through defining your product vision and requirements.
+
+**Required Topics:**
+- **Product Vision**: Overall concept and goals of the product
+- **User Personas**: Detailed profiles of target users
+- **Business Requirements**: Core requirements and constraints
+- **Feature Map**: Key features with priorities
+- **Success Criteria**: Metrics and KPIs for measuring success
+
+**Output:** A comprehensive Product Requirements Document (PRD)
 
 ### 2. UX Design (AI UX Designer)
 
-The UX Designer helps you create a UX document that includes:
-- User personas and journey maps
-- Information architecture
-- Wireframe descriptions
-- Prototype specifications
-- User testing plans
+The UX Designer helps you create a user experience plan based on the PRD.
+
+**Required Topics:**
+- **UI Documentation**: Visual design and UI components
+- **Feature Specifications**: Detailed feature descriptions
+- **User Journeys**: User flows and paths
+- **Interaction Patterns**: How users interact with features
+- **Data Requirements**: Information architecture and data needs
+
+**Output:** A detailed UX Design Document
 
 ### 3. Technical Architecture (AI Software Architect)
 
-The Software Architect helps you create a specification that includes:
-- System architecture
-- Technology stack recommendations
-- Functional specifications
-- Technical design
-- Integration requirements
+The Software Architect helps you define the technical implementation plan.
+
+**Required Topics:**
+- **Technical Architecture**: Overall system architecture
+- **API Specifications**: API design and endpoints
+- **Implementation Tasks**: Development tasks breakdown
+- **Database Schema**: Data model and relationships
+- **Testing Strategy**: Quality assurance approach
+
+**Output:** A comprehensive Software Specification
+
+The workflow automatically tracks which topics have been covered in each stage and guides you through a complete product development process. For more details, see [Enhanced Workflow Documentation](docs/enhanced-workflow.md).
 
 ## Standalone PRD Generation
 
