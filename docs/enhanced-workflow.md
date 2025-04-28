@@ -31,6 +31,8 @@ The system is designed to engage in conversation with the user until either:
    - The Software Architect's document is saved as `scripts/software_spec.txt`
    - When all stages are complete, a comprehensive document combining all three experts' outputs is generated and saved as `comprehensive_specification.md` and `scripts/comprehensive_specification.txt`
 
+   **Important**: When using Task Master, always use the `scripts/prd.txt` file, which contains the Product Requirements Document. This is the file that Task Master is designed to work with, not the comprehensive document.
+
 ## Workflow Structure
 
 The workflow is divided into three distinct stages, each handled by a specialized AI expert:

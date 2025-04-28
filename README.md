@@ -37,6 +37,8 @@ When you're ready to generate documents:
 - The Software Architect's document is saved as `scripts/software_spec.txt`
 - A comprehensive document combining all three experts' outputs is also generated
 
+**Important**: When using Task Master, always use the `scripts/prd.txt` file, which contains the Product Requirements Document. This is the file that Task Master is designed to work with, not the comprehensive document.
+
 ## 🚀 Quick Start for End Users
 
 ### Standalone Usage (Recommended)
