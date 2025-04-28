@@ -1,6 +1,6 @@
-import { 
-  EXPERT_WORKFLOW_STAGES, 
-  EXPERT_STAGE_MAPPING, 
+import {
+  EXPERT_WORKFLOW_STAGES,
+  EXPERT_STAGE_MAPPING,
   STAGE_COMPLETION_CRITERIA,
   getStageIntroduction,
   getTopicPhrases,
@@ -14,16 +14,16 @@ import { callAI } from '../utils/aiUtils';
  * Handle expert interaction based on the current workflow state
  */
 export async function handleExpertInteraction(
-  message: string, 
+  message: string,
   state: WorkflowState
 ): Promise<ExpertInteractionResult> {
   const { currentStage } = state;
   const expertName = EXPERT_STAGE_MAPPING[currentStage];
-  
+
   // Get the current stage data or initialize it
-  let stageData = state.stageData[currentStage] || { 
-    completed: false, 
-    completedTopics: [] 
+  let stageData = state.stageData[currentStage] || {
+    completed: false,
+    completedTopics: []
   };
 
   // Check for stage transition requests
@@ -54,13 +54,13 @@ export async function handleExpertInteraction(
   const expert = experts[expertName];
   const expertPrompt = expert.systemPrompt;
   const contextData = getContextForStage(state);
-  
+
   // Call the AI with appropriate prompt and context
   const aiResponse = await callAI(expertPrompt, contextData, message);
-  
+
   // Update the state with progress
   const updatedStageData = updateStageProgress(currentStage, stageData, message, aiResponse);
-  
+
   const updatedState = {
     ...state,
     stageData: {
@@ -68,9 +68,14 @@ export async function handleExpertInteraction(
       [currentStage]: updatedStageData
     }
   };
-  
+
+  // Check if we should use the updated response (with document generation suggestion)
+  const responseToUse = updatedStageData.suggestDocument ?
+    aiResponse + "\n\nWe've covered all the necessary topics for this stage. Would you like me to generate the document now? Please confirm by saying 'Yes, generate the document'." :
+    aiResponse;
+
   return {
-    response: aiResponse,
+    response: responseToUse,
     updatedState
   };
 }
@@ -89,8 +94,8 @@ function shouldTransitionToNextStage(message: string, stageData: any): boolean {
     "let's move on",
     "let's continue to"
   ];
-  
-  return transitionPhrases.some(phrase => 
+
+  return transitionPhrases.some(phrase =>
     message.toLowerCase().includes(phrase.toLowerCase())
   );
 }
@@ -109,10 +114,22 @@ function shouldGenerateDocument(message: string): boolean {
     "generate prd",
     "create prd",
     "generate specification",
-    "create specification"
+    "create specification",
+    "yes, generate the document",
+    "yes, create the document",
+    "please generate the document",
+    "please create the document",
+    "i'm ready for the document",
+    "i am ready for the document",
+    "let's generate the document",
+    "let's create the document",
+    "ok generate document",
+    "ok create document",
+    "ok generate the document",
+    "ok create the document"
   ];
-  
-  return documentPhrases.some(phrase => 
+
+  return documentPhrases.some(phrase =>
     message.toLowerCase().includes(phrase.toLowerCase())
   );
 }
@@ -123,9 +140,9 @@ function shouldGenerateDocument(message: string): boolean {
 function isStageComplete(stage: string, stageData: any): boolean {
   const { completedTopics, completed } = stageData;
   const requiredTopics = STAGE_COMPLETION_CRITERIA[stage];
-  
+
   // If already marked complete or all topics covered
-  return completed || 
+  return completed ||
     (requiredTopics && requiredTopics.every(topic => completedTopics.includes(topic)));
 }
 
@@ -135,9 +152,9 @@ function isStageComplete(stage: string, stageData: any): boolean {
 function getRemainingTopics(stage: string, stageData: any): string {
   const { completedTopics } = stageData;
   const requiredTopics = STAGE_COMPLETION_CRITERIA[stage];
-  
+
   if (!requiredTopics) return "all topics";
-  
+
   return requiredTopics
     .filter(topic => !completedTopics.includes(topic))
     .map(topic => topic.replace('_', ' '))
@@ -150,9 +167,9 @@ function getRemainingTopics(stage: string, stageData: any): string {
 function transitionToNextStage(state: WorkflowState): ExpertInteractionResult {
   const currentIndex = Object.values(EXPERT_WORKFLOW_STAGES)
     .findIndex(stage => stage === state.currentStage);
-  
+
   const stages = Object.values(EXPERT_WORKFLOW_STAGES);
-  
+
   // If we're at the last stage
   if (currentIndex === stages.length - 1) {
     return {
@@ -169,10 +186,10 @@ function transitionToNextStage(state: WorkflowState): ExpertInteractionResult {
       }
     };
   }
-  
+
   // Move to next stage
   const nextStage = stages[currentIndex + 1];
-  
+
   return {
     response: `Great! We've completed the ${state.currentStage.replace('_', ' ')} stage. Let's move on to the ${nextStage.replace('_', ' ')} stage.\n\n${getStageIntroduction(nextStage)}`,
     updatedState: {
@@ -201,11 +218,19 @@ function generateDocument(state: WorkflowState): ExpertInteractionResult {
   const { currentStage } = state;
   const expertName = EXPERT_STAGE_MAPPING[currentStage];
   const expert = experts[expertName];
-  
+
+  // Check if we have a document already or need to generate one
+  if (!state.stageData[currentStage].document) {
+    // We don't have a document yet, so ask for confirmation first
+    return {
+      response: `I'm ready to generate the ${expert.outputFormat} for your project. All required topics have been covered. Would you like me to generate the document now? Please confirm by saying "Yes, generate the document" or similar.`,
+      updatedState: state
+    };
+  }
+
   // Get the document content from the stage data
-  const document = state.stageData[currentStage].document || 
-    `# ${expert.outputFormat}\n\n[Document content will be generated]`;
-  
+  const document = state.stageData[currentStage].document;
+
   return {
     response: `Here's the ${expert.outputFormat} for your project:\n\n${document}`,
     updatedState: state,
@@ -219,7 +244,7 @@ function generateDocument(state: WorkflowState): ExpertInteractionResult {
  */
 function getContextForStage(state: WorkflowState): string {
   let context = "";
-  
+
   // Add context from previous stages
   for (const stage of state.completedStages) {
     const stageData = state.stageData[stage];
@@ -227,7 +252,7 @@ function getContextForStage(state: WorkflowState): string {
       context += `${stageData.document}\n\n`;
     }
   }
-  
+
   // Add context from current stage progress
   const currentStageData = state.stageData[state.currentStage];
   if (currentStageData && currentStageData.completedTopics.length > 0) {
@@ -237,7 +262,7 @@ function getContextForStage(state: WorkflowState): string {
       context += `Current topic: ${currentStageData.currentTopic}\n`;
     }
   }
-  
+
   return context;
 }
 
@@ -245,38 +270,43 @@ function getContextForStage(state: WorkflowState): string {
  * Update the progress of the current stage based on the interaction
  */
 function updateStageProgress(
-  stage: string, 
-  stageData: any, 
-  userMessage: string, 
+  stage: string,
+  stageData: any,
+  userMessage: string,
   aiResponse: string
 ): any {
   const { completedTopics, currentTopic } = stageData;
   const requiredTopics = STAGE_COMPLETION_CRITERIA[stage];
-  
+
   // Detect if we've completed the current topic based on AI response
   const topicCompletion = detectTopicCompletion(aiResponse, currentTopic);
-  
+
   // Detect next topic if current one is complete
-  const nextTopic = topicCompletion 
+  const nextTopic = topicCompletion
     ? detectNextTopic(requiredTopics, completedTopics, userMessage, aiResponse)
     : currentTopic;
-  
+
   // Update completed topics if we finished one
   const updatedCompletedTopics = topicCompletion && currentTopic
     ? [...completedTopics, currentTopic]
     : completedTopics;
-  
-  // Check if we've generated a document
-  const documentGenerated = aiResponse.includes("# ") && 
-    aiResponse.includes("## ") &&
-    requiredTopics.every(topic => updatedCompletedTopics.includes(topic));
-  
+
+  // Check if all topics are completed but don't automatically generate a document
+  const allTopicsCompleted = requiredTopics.every(topic => updatedCompletedTopics.includes(topic));
+
+  // Only mark as document generated if the AI response actually contains a document format
+  // AND we've explicitly been asked to generate a document (handled elsewhere)
+  const documentGenerated = false;
+
+  // Check if all topics are completed to suggest document generation
+
   return {
     ...stageData,
     completedTopics: updatedCompletedTopics,
     currentTopic: nextTopic,
     document: documentGenerated ? aiResponse : stageData.document,
-    completed: documentGenerated
+    completed: documentGenerated,
+    suggestDocument: allTopicsCompleted && !stageData.document
   };
 }
 
@@ -285,7 +315,7 @@ function updateStageProgress(
  */
 function detectTopicCompletion(aiResponse: string, currentTopic?: string): boolean {
   if (!currentTopic) return false;
-  
+
   // Check for phrases that indicate topic completion
   const completionPhrases = [
     "Great, we've covered",
@@ -297,7 +327,7 @@ function detectTopicCompletion(aiResponse: string, currentTopic?: string): boole
     "That covers",
     "Now we can move to"
   ];
-  
+
   return completionPhrases.some(phrase => aiResponse.includes(phrase));
 }
 
@@ -305,18 +335,18 @@ function detectTopicCompletion(aiResponse: string, currentTopic?: string): boole
  * Detect the next topic to discuss based on the interaction
  */
 function detectNextTopic(
-  requiredTopics: string[], 
-  completedTopics: string[], 
-  userMessage: string, 
+  requiredTopics: string[],
+  completedTopics: string[],
+  userMessage: string,
   aiResponse: string
 ): string | undefined {
   // Find topics not yet completed
   const remainingTopics = requiredTopics.filter(
     topic => !completedTopics.includes(topic)
   );
-  
+
   if (remainingTopics.length === 0) return undefined;
-  
+
   // Detect which topic is being introduced
   for (const topic of remainingTopics) {
     const topicPhrases = getTopicPhrases(topic);
@@ -329,7 +359,7 @@ function detectNextTopic(
       }
     }
   }
-  
+
   // Default to first remaining topic if we can't detect
   return remainingTopics[0];
 }
@@ -339,11 +369,11 @@ function detectNextTopic(
  */
 export function prepareDocumentForTaskMaster(state: WorkflowState): string {
   const { stageData } = state;
-  
+
   const productDoc = stageData[EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION]?.document || '';
   const uxDoc = stageData[EXPERT_WORKFLOW_STAGES.UX_DESIGN]?.document || '';
   const techDoc = stageData[EXPERT_WORKFLOW_STAGES.TECHNICAL_PLANNING]?.document || '';
-  
+
   // Combine all documents with separators
   const combinedDoc = `
 # COMPREHENSIVE PROJECT SPECIFICATION

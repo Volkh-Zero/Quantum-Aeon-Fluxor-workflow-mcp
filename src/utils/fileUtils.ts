@@ -12,13 +12,44 @@ export async function saveDocument(content: string, filename: string): Promise<s
   }
 }
 
+/**
+ * Save an expert document to the scripts directory
+ */
+export async function saveExpertDocument(content: string, expertType: string): Promise<string> {
+  try {
+    // Create scripts directory if it doesn't exist
+    const scriptsDir = path.join(process.cwd(), 'scripts');
+    try {
+      await fs.mkdir(scriptsDir, { recursive: true });
+    } catch (err) {
+      // Directory might already exist
+    }
+
+    // Map expert type to filename
+    const filenameMap: {[key: string]: string} = {
+      'productManager': 'prd.txt',
+      'uxDesigner': 'ux_design.txt',
+      'softwareArchitect': 'software_spec.txt'
+    };
+
+    const filename = filenameMap[expertType] || `${expertType.toLowerCase()}.txt`;
+    const filePath = path.join(scriptsDir, filename);
+
+    await fs.writeFile(filePath, content, 'utf8');
+    return filePath;
+  } catch (error) {
+    console.error('Error saving expert document:', error);
+    throw error;
+  }
+}
+
 export async function readTemplate(templatePath: string): Promise<string> {
   try {
     const fullPath = path.join(__dirname, '..', '..', templatePath);
     return await fs.readFile(fullPath, 'utf8');
   } catch (error) {
     console.error('Error reading template:', error);
-    
+
     // Fallback to default templates if file not found
     if (templatePath.includes('prd-template.md')) {
       return `# Product Requirements Document\n\n## Product Overview\n[Overview goes here]\n\n## Problem Statement\n[Problem statement goes here]`;
@@ -27,7 +58,7 @@ export async function readTemplate(templatePath: string): Promise<string> {
     } else if (templatePath.includes('software-spec-template.md')) {
       return `# Software Specification\n\n## System Architecture Overview\n[System architecture overview goes here]`;
     }
-    
+
     throw error;
   }
 }
@@ -38,7 +69,7 @@ export async function setupTaskMasterIntegration(): Promise<void> {
     // Create .cursor directory and rules if it doesn't exist
     const cursorDir = path.join(process.cwd(), '.cursor', 'rules');
     await fs.mkdir(cursorDir, { recursive: true });
-    
+
     // Create dev_workflow.mdc file for Cursor integration
     const devWorkflowContent = `# Task Master Development Workflow
 
@@ -69,12 +100,12 @@ To get the next task:
 What's the next task I should work on?
 \`\`\`
 `;
-    
+
     await fs.writeFile(path.join(cursorDir, 'dev_workflow.mdc'), devWorkflowContent, 'utf8');
-    
+
     return;
   } catch (error) {
     console.error('Error setting up Task Master integration:', error);
     throw error;
   }
-} 
+}

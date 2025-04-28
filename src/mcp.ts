@@ -1,9 +1,11 @@
 // Import the McpServer class using require instead of import
 import { experts, EXPERT_WORKFLOW_STAGES, getStageIntroduction } from './experts';
 import { consultWithExpert, generateExpertDocument, saveForTaskMaster } from './utils/aiUtils';
-import { saveDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
+import { saveDocument, saveExpertDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
 import { initialState, WorkflowState } from './state';
 import { handleExpertInteraction, prepareDocumentForTaskMaster } from './handlers/expertHandler';
+import fs from 'fs/promises';
+import path from 'path';
 
 // Define a global variable for TypeScript
 declare global {
@@ -152,16 +154,22 @@ Let's start by discussing your project: ${projectInfo}`;
 
           // If a document was generated, save it
           if (result.document && result.isComplete) {
+            // Save to regular file
             const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
             await saveDocument(result.document, filename);
 
-            // If this is a PRD, also save in Task Master format
+            // Also save to scripts directory
+            const scriptPath = await saveExpertDocument(result.document, role);
+
+            // Add info about saved document
+            result.response += `\n\nDocument saved to ${filename} and ${scriptPath}.`;
+
+            // If this is a PRD, also set up Task Master integration
             if (role === 'productManager') {
-              const tmPath = await saveForTaskMaster(result.document);
               await setupTaskMasterIntegration();
 
               // Add Task Master info to the response
-              result.response += `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+              result.response += `\n\nYou can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
             }
           }
 
@@ -253,19 +261,24 @@ Let's start by discussing your project: ${projectInfo}`;
           const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
           await saveDocument(document, filename);
 
-          // If this is a PRD and saveForTaskMaster is true, also save in Task Master format
+          // Also save to scripts directory
+          const scriptPath = await saveExpertDocument(document, role);
+
+          // Prepare message about saved documents
+          let saveMessage = `\n\nDocument saved to ${filename} and ${scriptPath}.`;
+
+          // If this is a PRD and saveForTaskMaster is true, also set up Task Master integration
           let taskMasterMessage = '';
           if (role === 'productManager' && saveForTM) {
-            const tmPath = await saveForTaskMaster(document);
             await setupTaskMasterIntegration();
-            taskMasterMessage = `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+            taskMasterMessage = `\n\nYou can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
           }
 
           // Update the state in our map
           documentStates.set(conversationId, state);
 
           return {
-            content: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}`
+            content: `# ${expert.outputFormat}\n\n${document}${saveMessage}${taskMasterMessage}`
           };
         } catch (error) {
           logError('Error in generateDocument:', error);
@@ -350,16 +363,23 @@ Let's start by discussing your project: ${projectDescription}`;
                               currentStage === EXPERT_WORKFLOW_STAGES.UX_DESIGN ? 'uxDesigner' : 'softwareArchitect';
 
             const expert = experts[expertName];
+
+            // Save to regular file
             const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
             await saveDocument(result.document, filename);
 
-            // If this is a PRD, also save in Task Master format
+            // Also save to scripts directory
+            const scriptPath = await saveExpertDocument(result.document, expertName);
+
+            // Add info about saved document
+            result.response += `\n\nDocument saved to ${filename} and ${scriptPath}.`;
+
+            // If this is a PRD, also set up Task Master integration
             if (currentStage === EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION) {
-              const tmPath = await saveForTaskMaster(result.document);
               await setupTaskMasterIntegration();
 
               // Add Task Master info to the response
-              result.response += `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+              result.response += `\n\nYou can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
             }
 
             // If all stages are complete, offer to generate a comprehensive document
@@ -368,11 +388,17 @@ Let's start by discussing your project: ${projectDescription}`;
 
               // Generate comprehensive document
               const comprehensiveDoc = prepareDocumentForTaskMaster(result.updatedState);
+
+              // Save to regular file
               const comprehensiveFilename = 'comprehensive_specification.md';
               await saveDocument(comprehensiveDoc, comprehensiveFilename);
 
+              // Also save to scripts directory
+              const comprehensiveScriptPath = path.join('scripts', 'comprehensive_specification.txt');
+              await fs.writeFile(comprehensiveScriptPath, comprehensiveDoc, 'utf8');
+
               // Add info about the comprehensive document
-              result.response += `\n\nA comprehensive document combining all phases has been saved to ${comprehensiveFilename}.`;
+              result.response += `\n\nA comprehensive document combining all phases has been saved to ${comprehensiveFilename} and ${comprehensiveScriptPath}.`;
             }
           }
 
