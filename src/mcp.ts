@@ -1,7 +1,9 @@
 // Import the McpServer class using require instead of import
-import { experts } from './experts';
+import { experts, EXPERT_WORKFLOW_STAGES, getStageIntroduction } from './experts';
 import { consultWithExpert, generateExpertDocument, saveForTaskMaster } from './utils/aiUtils';
 import { saveDocument, readTemplate, setupTaskMasterIntegration } from './utils/fileUtils';
+import { initialState, WorkflowState } from './state';
+import { handleExpertInteraction, prepareDocumentForTaskMaster } from './handlers/expertHandler';
 
 // Define a global variable for TypeScript
 declare global {
@@ -73,6 +75,10 @@ export function createMCPServer() {
     // Register the consultExpert tool
     try {
       log('Registering consultExpert tool');
+
+      // Create a state map to track workflow state for each conversation
+      const consultStates = new Map<string, WorkflowState>();
+
       server.tool('consultExpert', {
         type: 'object',
         properties: {
@@ -82,13 +88,17 @@ export function createMCPServer() {
           },
           projectInfo: {
             type: 'string',
-            description: 'Brief description of the project'
+            description: 'Brief description of the project or message to the expert'
+          },
+          conversationId: {
+            type: 'string',
+            description: 'Unique identifier for the conversation'
           }
         },
-        required: ['role']
+        required: ['role', 'projectInfo']
       }, async (params: any) => {
         log('consultExpert tool called with params:', params);
-        const { role, projectInfo } = params;
+        const { role, projectInfo, conversationId = 'default' } = params;
 
         if (!experts[role]) {
           return {
@@ -98,21 +108,64 @@ export function createMCPServer() {
 
         const expert = experts[role];
 
-        if (!projectInfo) {
-          let response = `# Consulting with ${expert.title}\n\n`;
-          response += "Please provide a brief description of your project to get started.\n\n";
-          response += "Initial questions to consider:\n";
-          expert.initialQuestions.forEach((q: string, i: number) => {
-            response += `${i+1}. ${q}\n`;
-          });
-          return { content: response };
+        // Map role to stage
+        const stageMap: {[key: string]: string} = {
+          'productManager': EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION,
+          'uxDesigner': EXPERT_WORKFLOW_STAGES.UX_DESIGN,
+          'softwareArchitect': EXPERT_WORKFLOW_STAGES.TECHNICAL_PLANNING
+        };
+
+        // Get or initialize the workflow state for this conversation
+        if (!consultStates.has(conversationId)) {
+          // Create a new state with the selected expert's stage as the current stage
+          const newState = JSON.parse(JSON.stringify(initialState));
+          newState.currentStage = stageMap[role];
+          consultStates.set(conversationId, newState);
+          log('Initialized new consultation state for conversation:', conversationId);
+        }
+
+        const state = consultStates.get(conversationId)!;
+
+        // If this is the first message, initialize with welcome message
+        if (state.stageData[state.currentStage]?.completedTopics.length === 0) {
+          const welcomeMessage = `# Consulting with ${expert.title}
+
+Thank you for providing your project description. I'll help you define the ${state.currentStage.replace('_', ' ')} for your project.
+
+${getStageIntroduction(state.currentStage)}
+
+Let's start by discussing your project: ${projectInfo}`;
+
+          // Initialize the state with the first message
+          const result = await handleExpertInteraction(projectInfo, state);
+          consultStates.set(conversationId, result.updatedState);
+
+          return { content: welcomeMessage };
         }
 
         try {
-          const aiResponse = await consultWithExpert(role, projectInfo);
-          return {
-            content: `# Consultation with ${expert.title}\n\n${aiResponse}`
-          };
+          // Handle the interaction using our expert handler
+          const result = await handleExpertInteraction(projectInfo, state);
+
+          // Update the state in our map
+          consultStates.set(conversationId, result.updatedState);
+
+          // If a document was generated, save it
+          if (result.document && result.isComplete) {
+            const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
+            await saveDocument(result.document, filename);
+
+            // If this is a PRD, also save in Task Master format
+            if (role === 'productManager') {
+              const tmPath = await saveForTaskMaster(result.document);
+              await setupTaskMasterIntegration();
+
+              // Add Task Master info to the response
+              result.response += `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+            }
+          }
+
+          return { content: result.response };
         } catch (error) {
           logError('Error in consultExpert:', error);
           return {
@@ -127,6 +180,10 @@ export function createMCPServer() {
     // Register the generateDocument tool
     try {
       log('Registering generateDocument tool');
+
+      // Create a state map to track workflow state for each conversation
+      const documentStates = new Map<string, WorkflowState>();
+
       server.tool('generateDocument', {
         type: 'object',
         properties: {
@@ -136,17 +193,21 @@ export function createMCPServer() {
           },
           projectDetails: {
             type: 'string',
-            description: 'Detailed project information'
+            description: 'Detailed project information or conversation summary'
           },
           saveForTaskMaster: {
             type: 'boolean',
             description: 'Whether to save the document in a format compatible with Task Master'
+          },
+          conversationId: {
+            type: 'string',
+            description: 'Unique identifier for the conversation'
           }
         },
         required: ['role', 'projectDetails']
       }, async (params: any) => {
         log('generateDocument tool called with params:', params);
-        const { role, projectDetails, saveForTaskMaster: saveForTM = false } = params;
+        const { role, projectDetails, saveForTaskMaster: saveForTM = false, conversationId = 'default' } = params;
 
         if (!experts[role]) {
           return {
@@ -156,12 +217,40 @@ export function createMCPServer() {
 
         const expert = experts[role];
 
+        // Map role to stage
+        const stageMap: {[key: string]: string} = {
+          'productManager': EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION,
+          'uxDesigner': EXPERT_WORKFLOW_STAGES.UX_DESIGN,
+          'softwareArchitect': EXPERT_WORKFLOW_STAGES.TECHNICAL_PLANNING
+        };
+
+        // Get or initialize the workflow state for this conversation
+        if (!documentStates.has(conversationId)) {
+          // Create a new state with the selected expert's stage as the current stage
+          const newState = JSON.parse(JSON.stringify(initialState));
+          newState.currentStage = stageMap[role];
+          documentStates.set(conversationId, newState);
+          log('Initialized new document state for conversation:', conversationId);
+        }
+
+        const state = documentStates.get(conversationId)!;
+
         try {
+          // First, mark the current stage as complete
+          state.stageData[state.currentStage] = {
+            ...state.stageData[state.currentStage],
+            completed: true
+          };
+
+          // Generate the document using the template
           const template = await readTemplate(expert.templatePath);
           const document = await generateExpertDocument(role, template, projectDetails);
 
+          // Save the document to the state
+          state.stageData[state.currentStage].document = document;
+
           // Save the document to a file
-          const filename = `${expert.outputFormat.replace(/\s+/g, '_').toLowerCase()}.md`;
+          const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
           await saveDocument(document, filename);
 
           // If this is a PRD and saveForTaskMaster is true, also save in Task Master format
@@ -171,6 +260,9 @@ export function createMCPServer() {
             await setupTaskMasterIntegration();
             taskMasterMessage = `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
           }
+
+          // Update the state in our map
+          documentStates.set(conversationId, state);
 
           return {
             content: `# ${expert.outputFormat}\n\n${document}\n\n(Document saved to ${filename})${taskMasterMessage}`
@@ -189,71 +281,102 @@ export function createMCPServer() {
     // Register the expertWorkflow tool
     try {
       log('Registering expertWorkflow tool');
+
+      // Create a state map to track workflow state for each conversation
+      const workflowStates = new Map<string, WorkflowState>();
+
       server.tool('expertWorkflow', {
         type: 'object',
         properties: {
-          random_string: {
+          projectDescription: {
             type: 'string',
-            description: 'Dummy parameter for no-parameter tools'
+            description: 'Description of the project or message to the expert'
+          },
+          conversationId: {
+            type: 'string',
+            description: 'Unique identifier for the conversation'
           }
         },
-        required: ['random_string']
-      }, async (params: { random_string: string }) => {
+        required: ['projectDescription']
+      }, async (params: { projectDescription: string, conversationId?: string }) => {
         log('expertWorkflow tool called with params:', params);
 
         try {
-          const { random_string } = params;
-          log('Processing request with input:', random_string);
+          const { projectDescription, conversationId = 'default' } = params;
+          log('Processing request with input:', projectDescription);
 
-          // Use a simpler response format - just text string instead of array
-          const responseText = `# AI Expert Workflow
+          // Get or initialize the workflow state for this conversation
+          if (!workflowStates.has(conversationId)) {
+            workflowStates.set(conversationId, JSON.parse(JSON.stringify(initialState)));
+            log('Initialized new workflow state for conversation:', conversationId);
+          }
 
-This workflow helps you develop your project through three expert consultations:
+          const state = workflowStates.get(conversationId)!;
 
-1. **Product Definition** - Work with an AI Product Manager to create a PRD with:
-   - Product Overview and Problem Statement
-   - User Personas and Stories
-   - Feature Requirements
-   - MVP Summary
-   - Business Model
-   - Lean Startup Validation Plan
-   \`\`\`
-   consultExpert productManager "Brief project description"
-   \`\`\`
+          // If this is the first message and it looks like a project description, initialize with welcome message
+          if (state.completedStages.length === 0 && state.stageData[state.currentStage].completedTopics.length === 0) {
+            const isInitialDescription = projectDescription.length > 30 &&
+              !projectDescription.toLowerCase().includes('?') &&
+              !projectDescription.toLowerCase().includes('hello') &&
+              !projectDescription.toLowerCase().includes('hi ');
 
-2. **UX Design** - Work with an AI UX Designer to create a UX Design Document with:
-   - User Personas and Journey Maps
-   - Information Architecture
-   - Wireframe Descriptions
-   - Prototype Description
-   - User Testing Plan
-   \`\`\`
-   consultExpert uxDesigner "Brief project description"
-   \`\`\`
+            if (isInitialDescription) {
+              const welcomeMessage = `# Welcome to the AI Expert Workflow
 
-3. **Technical Architecture** - Work with an AI Software Architect to create a Software Specification with:
-   - System Architecture Overview
-   - Technology Stack Recommendations
-   - Functional Specifications
-   - Technical Design
-   - Integration Requirements
-   \`\`\`
-   consultExpert softwareArchitect "Brief project description"
-   \`\`\`
+Thank you for providing your project description. I'll guide you through a comprehensive product development process with three expert consultations:
 
-After consulting with each expert, use \`generateDocument\` to create the full document:
-   \`\`\`
-   generateDocument productManager "Detailed project information from consultation" true
-   \`\`\`
+1. **Product Definition** with an AI Product Manager
+2. **UX Design** with an AI UX Designer
+3. **Technical Architecture** with an AI Software Architect
 
-The \`true\` parameter at the end saves the PRD in a format that Task Master can parse.
-Once you have your PRD saved, you can use Task Master to create tasks with:
-   \`\`\`
-   Can you parse the PRD at scripts/prd.txt and generate tasks?
-   \`\`\``;
+${getStageIntroduction(EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION)}
 
-          // Try a different response format that might be more compatible
-          return { content: responseText };
+Let's start by discussing your project: ${projectDescription}`;
+
+              return { content: welcomeMessage };
+            }
+          }
+
+          // Handle the interaction using our expert handler
+          const result = await handleExpertInteraction(projectDescription, state);
+
+          // Update the state in our map
+          workflowStates.set(conversationId, result.updatedState);
+
+          // If a document was generated, save it
+          if (result.document && result.isComplete) {
+            const currentStage = result.updatedState.currentStage;
+            const expertName = currentStage === EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION ? 'productManager' :
+                              currentStage === EXPERT_WORKFLOW_STAGES.UX_DESIGN ? 'uxDesigner' : 'softwareArchitect';
+
+            const expert = experts[expertName];
+            const filename = `${expert.outputFormat.replace(/\\s+/g, '_').toLowerCase()}.md`;
+            await saveDocument(result.document, filename);
+
+            // If this is a PRD, also save in Task Master format
+            if (currentStage === EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION) {
+              const tmPath = await saveForTaskMaster(result.document);
+              await setupTaskMasterIntegration();
+
+              // Add Task Master info to the response
+              result.response += `\n\nDocument also saved for Task Master at ${tmPath}. You can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+            }
+
+            // If all stages are complete, offer to generate a comprehensive document
+            if (result.updatedState.completedStages.length === Object.keys(EXPERT_WORKFLOW_STAGES).length - 1 &&
+                result.updatedState.stageData[result.updatedState.currentStage].completed) {
+
+              // Generate comprehensive document
+              const comprehensiveDoc = prepareDocumentForTaskMaster(result.updatedState);
+              const comprehensiveFilename = 'comprehensive_specification.md';
+              await saveDocument(comprehensiveDoc, comprehensiveFilename);
+
+              // Add info about the comprehensive document
+              result.response += `\n\nA comprehensive document combining all phases has been saved to ${comprehensiveFilename}.`;
+            }
+          }
+
+          return { content: result.response };
         } catch (error) {
           logError('Error in expertWorkflow:', error);
           return {
