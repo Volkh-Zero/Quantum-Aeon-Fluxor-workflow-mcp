@@ -72,9 +72,23 @@ Task Master AI also supports Perplexity API models (optional, for enhanced resea
 - `sonar-medium-online`
 - `sonar-pro` (recommended)
 
-## Enhanced Workflow
+## Enhanced Workflow: The Three Spheres Method
 
-AI Expert Workflow now features a structured conversation flow with topic tracking and stage transitions. This ensures comprehensive coverage of all important aspects of your product.
+AI Expert Workflow now implements the "Méthode des Trois Sphères" (Three Spheres Method), a methodical approach that transforms ideas into functional products through three distinct phases. Each expert builds upon the work of the previous one:
+
+1. **Sphere 1: Product Definition & Architectural Foundation** (AI Product Manager)
+   - Establishes the solid foundation for the entire project
+   - Defines the product vision, user personas, business requirements, and key features
+
+2. **Sphere 2: UX Design & Feature Expansion** (AI UX Designer)
+   - Uses the Product Manager's document as input
+   - Develops the user experience and expands on each feature
+
+3. **Sphere 3: Technical Planning & Implementation Specifications** (AI Software Architect)
+   - Uses both the Product Manager's and UX Designer's documents as input
+   - Transforms the vision into a concrete technical plan
+
+This progressive development process ensures comprehensive coverage of all important aspects of your product, from initial concept to technical implementation.
 
 ### Step 1: Generate Your PRD with AI Expert Workflow (Required)
 
