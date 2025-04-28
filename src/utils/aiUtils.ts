@@ -86,7 +86,7 @@ export async function generateExpertDocument(role: string, template: string, use
 }
 
 // Special function to save PRD in the format Task Master expects
-export async function saveForTaskMaster(content: string): Promise<string> {
+export async function saveForTaskMaster(content: string, isInitial: boolean = false): Promise<string> {
   try {
     // Create scripts directory if it doesn't exist
     const scriptsDir = path.join(process.cwd(), 'scripts');
@@ -96,8 +96,9 @@ export async function saveForTaskMaster(content: string): Promise<string> {
       // Directory might already exist
     }
 
-    // Save to scripts/prd.txt for Task Master compatibility
-    const filePath = path.join(scriptsDir, 'prd.txt');
+    // Determine the filename based on whether this is the initial PRD or the final one
+    const filename = isInitial ? 'initial_prd.txt' : 'prd.txt';
+    const filePath = path.join(scriptsDir, filename);
     await fs.writeFile(filePath, content, 'utf8');
 
     return filePath;

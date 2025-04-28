@@ -13,7 +13,9 @@ export async function saveDocument(content: string, filename: string): Promise<s
 }
 
 /**
- * Save an expert document to the scripts directory
+ * Save or update the PRD file with expert content
+ * This function saves all expert content to the same PRD file,
+ * updating it as the workflow progresses through different experts
  */
 export async function saveExpertDocument(content: string, expertType: string): Promise<string> {
   try {
@@ -25,17 +27,45 @@ export async function saveExpertDocument(content: string, expertType: string): P
       // Directory might already exist
     }
 
-    // Map expert type to filename
-    const filenameMap: {[key: string]: string} = {
-      'productManager': 'prd.txt',
-      'uxDesigner': 'ux_design.txt',
-      'softwareArchitect': 'software_spec.txt'
-    };
+    // Always save to prd.txt, but with appropriate section headers based on expert type
+    const filePath = path.join(scriptsDir, 'prd.txt');
 
-    const filename = filenameMap[expertType] || `${expertType.toLowerCase()}.txt`;
-    const filePath = path.join(scriptsDir, filename);
+    // Check if file exists
+    let existingContent = '';
+    try {
+      existingContent = await fs.readFile(filePath, 'utf8');
+    } catch (err) {
+      // File doesn't exist yet, which is fine
+    }
 
-    await fs.writeFile(filePath, content, 'utf8');
+    // Add appropriate section headers based on expert type
+    let updatedContent = '';
+    if (expertType === 'productManager') {
+      // For Product Manager, just use the content directly as the base PRD
+      updatedContent = content;
+    } else {
+      // For other experts, append their content to the existing PRD with clear section headers
+      const sectionTitle = expertType === 'uxDesigner' ?
+        '# UX DESIGN SPECIFICATIONS' :
+        '# TECHNICAL ARCHITECTURE SPECIFICATIONS';
+
+      // If there's existing content, add a separator
+      if (existingContent) {
+        updatedContent = `${existingContent}\n\n---\n\n${sectionTitle}\n\n${content}`;
+      } else {
+        // If no existing content (shouldn't happen), just add the section
+        updatedContent = `${sectionTitle}\n\n${content}`;
+      }
+    }
+
+    // Write the updated content
+    await fs.writeFile(filePath, updatedContent, 'utf8');
+
+    // Also save a copy with the expert type for reference (optional)
+    const expertFilename = `${expertType.toLowerCase()}_contribution.md`;
+    const expertFilePath = path.join(process.cwd(), expertFilename);
+    await fs.writeFile(expertFilePath, content, 'utf8');
+
     return filePath;
   } catch (error) {
     console.error('Error saving expert document:', error);

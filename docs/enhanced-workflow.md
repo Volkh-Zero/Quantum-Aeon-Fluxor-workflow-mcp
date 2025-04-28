@@ -24,14 +24,16 @@ The system is designed to engage in conversation with the user until either:
    - The UX Designer prompt: "Before concluding, verify all UX decisions with the user and ensure alignment with the product vision. When the user is satisfied, ask if they would like to generate the final UX Design Document..."
    - The Software Architect prompt: "Before concluding, verify the technical approach with the user and ensure it meets all requirements from previous stages. When the user is satisfied, ask if they would like to generate the final Software Specification document."
 
-4. **Document Storage**
-   - Each expert's document is saved in both the root directory (e.g., `PRD.md`) and the scripts directory (e.g., `scripts/prd.txt`)
-   - The Product Manager's document is saved as `scripts/prd.txt` for Task Master compatibility
-   - The UX Designer's document is saved as `scripts/ux_design.txt`
-   - The Software Architect's document is saved as `scripts/software_spec.txt`
-   - When all stages are complete, a comprehensive document combining all three experts' outputs is generated and saved as `comprehensive_specification.md` and `scripts/comprehensive_specification.txt`
+4. **Document Storage and Continuous Improvement**
+   - Each expert's document is saved in the root directory (e.g., `PRD.md`, `UX_Design_Document.md`)
+   - The `scripts/prd.txt` file is continuously updated throughout all phases:
+     - First, it contains the Product Manager's document
+     - Then, the UX Designer's content is added with appropriate section headers
+     - Finally, the Software Architect's content is added to complete the specification
+   - This ensures that by the end of the workflow, `scripts/prd.txt` contains a comprehensive specification with input from all three experts
+   - Individual expert contributions are also saved separately as reference files
 
-   **Important**: When using Task Master, always use the `scripts/prd.txt` file, which contains the Product Requirements Document. This is the file that Task Master is designed to work with, not the comprehensive document.
+   **Important**: The `scripts/prd.txt` file is continuously improved throughout the workflow, making it ready for Task Master at any point, but it's most valuable after all three expert phases are complete.
 
 ## Workflow Structure
 

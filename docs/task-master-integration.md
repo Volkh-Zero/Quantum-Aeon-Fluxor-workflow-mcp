@@ -105,7 +105,7 @@ AI Expert Workflow now features a structured conversation flow with topic tracki
    Can you generate a complete PRD document based on our consultation?
    ```
 
-7. Review your PRD in `PRD.md` and `scripts/prd.txt`
+7. Review your PRD in `PRD.md` and the continuously updated `scripts/prd.txt`
 
 At this point, you have a complete PRD that you can use for your development planning. You can stop here if you don't need task management.
 
@@ -118,7 +118,7 @@ If you want to break down your PRD into development tasks:
    Can you parse the PRD at scripts/prd.txt and generate tasks?
    ```
 
-   **Important**: Always use the `scripts/prd.txt` file with Task Master, not the comprehensive document. Task Master is designed to work with the Product Requirements Document specifically.
+   **Important**: The `scripts/prd.txt` file is continuously improved throughout the workflow. While you can use it with Task Master at any point, it's most valuable after all three expert phases are complete, as it will then contain a comprehensive specification with input from all three experts.
 
 2. Use Task Master to work on the generated tasks:
    ```

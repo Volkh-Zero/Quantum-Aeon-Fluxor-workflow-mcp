@@ -31,13 +31,15 @@ The system engages in conversation with you until you're ready to generate a doc
 
 When you're ready to generate documents:
 
-- Each expert's document is saved in both the main directory and the scripts directory
-- The Product Manager's document (PRD) is saved as `scripts/prd.txt` for Task Master compatibility
-- The UX Designer's document is saved as `scripts/ux_design.txt`
-- The Software Architect's document is saved as `scripts/software_spec.txt`
-- A comprehensive document combining all three experts' outputs is also generated
+- Each expert's document is saved in the main directory (e.g., `PRD.md`, `UX_Design_Document.md`)
+- The `scripts/prd.txt` file is continuously updated throughout all phases:
+  - First, it contains the Product Manager's document
+  - Then, the UX Designer's content is added with appropriate section headers
+  - Finally, the Software Architect's content is added to complete the specification
+- This ensures that by the end of the workflow, `scripts/prd.txt` contains a comprehensive specification with input from all three experts
+- Individual expert contributions are also saved separately as reference files
 
-**Important**: When using Task Master, always use the `scripts/prd.txt` file, which contains the Product Requirements Document. This is the file that Task Master is designed to work with, not the comprehensive document.
+**Important**: The `scripts/prd.txt` file is continuously improved throughout the workflow, making it ready for Task Master at any point, but it's most valuable after all three expert phases are complete.
 
 ## 🚀 Quick Start for End Users
 

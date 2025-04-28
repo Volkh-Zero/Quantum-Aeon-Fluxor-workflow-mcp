@@ -374,31 +374,21 @@ Let's start by discussing your project: ${projectDescription}`;
             // Add info about saved document
             result.response += `\n\nDocument saved to ${filename} and ${scriptPath}.`;
 
-            // If this is a PRD, also set up Task Master integration
+            // If this is a PRD, save it as initial_prd.txt
             if (currentStage === EXPERT_WORKFLOW_STAGES.PRODUCT_DEFINITION) {
-              await setupTaskMasterIntegration();
+              // Save as initial_prd.txt since this is just the first phase
+              await saveForTaskMaster(result.document, true);
 
-              // Add Task Master info to the response
-              result.response += `\n\nYou can now use Task Master to parse this PRD with: "Can you parse the PRD at scripts/prd.txt and generate tasks?"`;
+              // Don't set up Task Master integration yet, as we'll wait for the comprehensive document
+              result.response += `\n\nInitial PRD saved to scripts/initial_prd.txt. After completing all phases, a comprehensive document will be saved as scripts/prd.txt for Task Master.`;
             }
 
-            // If all stages are complete, offer to generate a comprehensive document
+            // If all stages are complete, inform the user that the PRD has been updated with all expert input
             if (result.updatedState.completedStages.length === Object.keys(EXPERT_WORKFLOW_STAGES).length - 1 &&
                 result.updatedState.stageData[result.updatedState.currentStage].completed) {
 
-              // Generate comprehensive document
-              const comprehensiveDoc = prepareDocumentForTaskMaster(result.updatedState);
-
-              // Save to regular file
-              const comprehensiveFilename = 'comprehensive_specification.md';
-              await saveDocument(comprehensiveDoc, comprehensiveFilename);
-
-              // Also save to scripts directory
-              const comprehensiveScriptPath = path.join('scripts', 'comprehensive_specification.txt');
-              await fs.writeFile(comprehensiveScriptPath, comprehensiveDoc, 'utf8');
-
-              // Add info about the comprehensive document
-              result.response += `\n\nA comprehensive document combining all phases has been saved to ${comprehensiveFilename} and ${comprehensiveScriptPath}.`;
+              // Add info about the complete PRD
+              result.response += `\n\nThe PRD file (scripts/prd.txt) has been continuously updated throughout all phases and now contains a comprehensive specification with input from all three experts. You can use this file with Task Master.`;
             }
           }
 
