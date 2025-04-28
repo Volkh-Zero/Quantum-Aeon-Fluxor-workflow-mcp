@@ -1,6 +1,6 @@
 {
   "name": "ai-expert-workflow-mcp",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Enhanced AI Expert Workflow MCP Server with structured conversation flow, topic tracking, and optional Task Master integration",
   "main": "dist/index.js",
   "bin": {
