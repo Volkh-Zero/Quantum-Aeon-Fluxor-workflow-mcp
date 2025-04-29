@@ -532,16 +532,16 @@ If you want to convert your PRD into development tasks, you can use Task Master 
 
 The project includes utility scripts to demonstrate Task Master integration:
 
-- `generate-task-master-files.js`: Creates sample PRD and Task Master integration files using the MCP implementation
-- `generate-task-master-files-simple.js`: Creates sample PRD and Task Master integration files without using MCP
+- `src/generate-task-master-files.js`: Creates sample PRD and Task Master integration files using the MCP implementation
+- `src/generate-task-master-files-simple.js`: Creates sample PRD and Task Master integration files without using MCP
 
 These scripts are useful for testing and understanding how the integration works.
 
 ## For More Information
 
-See the [Create-MCP.md](Create-MCP.md) file for a complete guide on creating your own AI Expert Workflow MCP server from scratch.
+See the [docs/Create-MCP.md](docs/Create-MCP.md) file for a complete guide on creating your own AI Expert Workflow MCP server from scratch.
 
-For details on OpenRouter API integration, see [OPENROUTER.md](OPENROUTER.md).
+For details on OpenRouter API integration, see [docs/OPENROUTER.md](docs/OPENROUTER.md).
 
 For Task Master AI documentation, see [Task Master on npm](https://www.npmjs.com/package/task-master-ai).
 

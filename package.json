@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "bin": {
     "ai-expert-workflow-mcp": "dist/index.js",
-    "ai-expert-workflow-generate": "generate-and-parse.js",
-    "ai-expert-workflow-prd": "generate-prd.js"
+    "ai-expert-workflow-generate": "src/generate-and-parse.js",
+    "ai-expert-workflow-prd": "src/generate-prd.js"
   },
   "scripts": {
     "build": "tsc",
@@ -27,7 +27,7 @@
     "test:mcp-only": "node tests/test-mcp-only.js",
     "test:openrouter-direct": "node tests/test-openrouter-direct.js",
     "check-sdk": "node tests/check-mcp-sdk.js",
-    "generate": "node generate-and-parse.js"
+    "generate": "node src/generate-and-parse.js"
   },
   "keywords": [
     "ai",
