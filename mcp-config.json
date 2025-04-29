@@ -7,7 +7,7 @@
       ],
       "cwd": "${workspaceFolder}",
       "env": {
-        "OPENROUTER_API_KEY": "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",
+        "OPENROUTER_API_KEY": "${env:OPENROUTER_API_KEY}",
         "OPENROUTER_MODEL": "tngtech/deepseek-r1t-chimera:free",
         "MAX_TOKENS": 4000,
         "TEMPERATURE": 0.7,
