@@ -1,5 +1,5 @@
 {
-  "name": "ai-expert-workflow-mcp",
+  "name": "@yourusername/ai-expert-workflow-mcp",
   "version": "2.3.2",
   "description": "Enhanced AI Expert Workflow MCP Server with structured conversation flow, topic tracking, and optional Task Master integration",
   "main": "dist/index.js",
@@ -44,14 +44,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bacoco/ai-expert-workflow-mcp.git"
+    "url": "https://github.com/Volkh-Zero/Quantum-Aeon-Fluxor-workflow-mcp"
   },
-  "author": "bacoco",
+  "author": "Volkh-Zero",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bacoco/ai-expert-workflow-mcp/issues"
+    "url": "https://github.com/Volkh-Zero/Quantum-Aeon-Fluxor-workflow-mcp/issues"
   },
-  "homepage": "https://github.com/bacoco/ai-expert-workflow-mcp#readme",
+  "homepage": "https://github.com/Volkh-Zero/Quantum-Aeon-Fluxor-workflow-mcp#readme",
   "devDependencies": {
     "@types/node": "^22.14.1",
     "@types/node-fetch": "^2.6.11",
@@ -60,8 +60,10 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.9.0",
+    "@genkit-ai/mcp": "^1.15.5",
+    "@modelcontextprotocol/sdk": "^1.17.1",
     "dotenv": "^16.5.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "openmcp-sdk": "^0.0.9"
   }
 }
